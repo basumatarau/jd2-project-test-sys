@@ -226,9 +226,10 @@ ENGINE = InnoDB;
 -- Table `test-system-db-0.0.1`.`users_has_assigned_tests`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db-0.0.1`.`users_has_assigned_tests` (
+  `idassigned_test` INT NOT NULL AUTO_INCREMENT,
   `users_iduser` INT NOT NULL,
   `tests_idtest` INT NOT NULL,
-  PRIMARY KEY (`users_iduser`, `tests_idtest`),
+  PRIMARY KEY (`idassigned_test`),
   INDEX `fk_users_has_tests1_tests1_idx` (`tests_idtest` ASC),
   INDEX `fk_users_has_tests1_users1_idx` (`users_iduser` ASC),
   CONSTRAINT `fk_users_has_tests1_users1`
@@ -267,23 +268,21 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db-0.0.1`.`results`
+-- Table `test-system-db-0.0.1`.`answeredQuestions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db-0.0.1`.`results` (
-  `idresult` INT NOT NULL AUTO_INCREMENT,
-  `users_has_assigned_tests_users_iduser` INT NOT NULL,
-  `users_has_assigned_tests_tests_idtest` INT NOT NULL,
-  `questions_idquestion` INT NOT NULL,
-  PRIMARY KEY (`idresult`, `users_has_assigned_tests_users_iduser`, `users_has_assigned_tests_tests_idtest`, `questions_idquestion`),
-  INDEX `fk_results_users_has_assigned_tests1_idx` (`users_has_assigned_tests_users_iduser` ASC, `users_has_assigned_tests_tests_idtest` ASC),
-  INDEX `fk_results_questions1_idx` (`questions_idquestion` ASC),
-  CONSTRAINT `fk_results_users_has_assigned_tests1`
-    FOREIGN KEY (`users_has_assigned_tests_users_iduser` , `users_has_assigned_tests_tests_idtest`)
-    REFERENCES `test-system-db-0.0.1`.`users_has_assigned_tests` (`users_iduser` , `tests_idtest`)
-    ON DELETE CASCADE
+CREATE TABLE IF NOT EXISTS `test-system-db-0.0.1`.`answeredQuestions` (
+  `idassigned_test` INT NOT NULL,
+  `idquestion` INT NOT NULL,
+  PRIMARY KEY (`idassigned_test`, `idquestion`),
+  INDEX `fk_users_has_assigned_tests_has_questions_questions1_idx` (`idquestion` ASC),
+  INDEX `fk_users_has_assigned_tests_has_questions_users_has_assigne_idx` (`idassigned_test` ASC),
+  CONSTRAINT `fk_users_has_assigned_tests_has_questions_users_has_assigned_1`
+    FOREIGN KEY (`idassigned_test`)
+    REFERENCES `test-system-db-0.0.1`.`users_has_assigned_tests` (`idassigned_test`)
+    ON DELETE NO ACTION
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_results_questions1`
-    FOREIGN KEY (`questions_idquestion`)
+  CONSTRAINT `fk_users_has_assigned_tests_has_questions_questions1`
+    FOREIGN KEY (`idquestion`)
     REFERENCES `test-system-db-0.0.1`.`questions` (`idquestion`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
@@ -291,25 +290,25 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db-0.0.1`.`results_has_answers`
+-- Table `test-system-db-0.0.1`.`answeredQuestions_has_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db-0.0.1`.`results_has_answers` (
-  `results_idresult` INT NOT NULL,
-  `results_users_has_assigned_tests_users_iduser` INT NOT NULL,
-  `results_users_has_assigned_tests_tests_idtest` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `test-system-db-0.0.1`.`answeredQuestions_has_answers` (
+  `answeredQuestions_idassigned_test` INT NOT NULL,
+  `answeredQuestions_idquestion` INT NOT NULL,
   `answers_idanswer` INT NOT NULL,
-  PRIMARY KEY (`results_idresult`, `results_users_has_assigned_tests_users_iduser`, `results_users_has_assigned_tests_tests_idtest`, `answers_idanswer`),
-  INDEX `fk_results_has_answers_answers1_idx` (`answers_idanswer` ASC),
-  INDEX `fk_results_has_answers_results1_idx` (`results_idresult` ASC, `results_users_has_assigned_tests_users_iduser` ASC, `results_users_has_assigned_tests_tests_idtest` ASC),
-  CONSTRAINT `fk_results_has_answers_results1`
-    FOREIGN KEY (`results_idresult` , `results_users_has_assigned_tests_users_iduser` , `results_users_has_assigned_tests_tests_idtest`)
-    REFERENCES `test-system-db-0.0.1`.`results` (`idresult` , `users_has_assigned_tests_users_iduser` , `users_has_assigned_tests_tests_idtest`)
+  `givenAnswer` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`answeredQuestions_idassigned_test`, `answeredQuestions_idquestion`, `answers_idanswer`),
+  INDEX `fk_answeredQuestions_has_answers_answers1_idx` (`answers_idanswer` ASC),
+  INDEX `fk_answeredQuestions_has_answers_answeredQuestions1_idx` (`answeredQuestions_idassigned_test` ASC, `answeredQuestions_idquestion` ASC),
+  CONSTRAINT `fk_answeredQuestions_has_answers_answeredQuestions1`
+    FOREIGN KEY (`answeredQuestions_idassigned_test` , `answeredQuestions_idquestion`)
+    REFERENCES `test-system-db-0.0.1`.`answeredQuestions` (`idassigned_test` , `idquestion`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `fk_results_has_answers_answers1`
+  CONSTRAINT `fk_answeredQuestions_has_answers_answers1`
     FOREIGN KEY (`answers_idanswer`)
     REFERENCES `test-system-db-0.0.1`.`answers` (`idanswer`)
-    ON DELETE CASCADE
+    ON DELETE RESTRICT
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
