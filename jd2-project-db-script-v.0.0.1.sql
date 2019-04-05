@@ -43,16 +43,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`authorities`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`authorities` (
-  `idauthority` INT NOT NULL AUTO_INCREMENT,
-  `authority` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idauthority`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `test-system-db`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users` (
@@ -64,14 +54,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`users` (
   `password` VARCHAR(80) NOT NULL,
   `salt` VARCHAR(60) NOT NULL,
   `isEnabled` TINYINT(1) NOT NULL,
-  `authorities_idauthority` INT NOT NULL,
-  PRIMARY KEY (`iduser`),
-  INDEX `fk_users_authorities1_idx` (`authorities_idauthority` ASC),
-  CONSTRAINT `fk_users_authorities1`
-    FOREIGN KEY (`authorities_idauthority`)
-    REFERENCES `test-system-db`.`authorities` (`idauthority`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`iduser`))
 ENGINE = InnoDB;
 
 
@@ -107,29 +90,14 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`answers` (
   `idanswer` INT NOT NULL AUTO_INCREMENT,
   `isFalse` TINYINT(1) NOT NULL,
   `body` VARCHAR(200) NOT NULL,
-  PRIMARY KEY (`idanswer`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `test-system-db`.`questions_has_answers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`questions_has_answers` (
-  `questions_idquestions` INT NOT NULL,
-  `answers_idanswer` INT NOT NULL,
-  PRIMARY KEY (`questions_idquestions`, `answers_idanswer`),
-  INDEX `fk_questions_has_answers_answers1_idx` (`answers_idanswer` ASC),
-  INDEX `fk_questions_has_answers_questions_idx` (`questions_idquestions` ASC),
-  CONSTRAINT `fk_questions_has_answers_questions`
-    FOREIGN KEY (`questions_idquestions`)
+  `questions_idquestion` INT NOT NULL,
+  PRIMARY KEY (`idanswer`, `questions_idquestion`),
+  INDEX `fk_answers_questions1_idx` (`questions_idquestion` ASC),
+  CONSTRAINT `fk_answers_questions1`
+    FOREIGN KEY (`questions_idquestion`)
     REFERENCES `test-system-db`.`questions` (`idquestion`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_questions_has_answers_answers1`
-    FOREIGN KEY (`answers_idanswer`)
-    REFERENCES `test-system-db`.`answers` (`idanswer`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -155,11 +123,28 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`questions_has_tags` (
   CONSTRAINT `fk_questions_has_tags_questions1`
     FOREIGN KEY (`questions_idquestions`)
     REFERENCES `test-system-db`.`questions` (`idquestion`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_questions_has_tags_tags1`
     FOREIGN KEY (`tags_idtag`)
     REFERENCES `test-system-db`.`tags` (`idtag`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `test-system-db`.`authorities`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `test-system-db`.`authorities` (
+  `idauthority` INT NOT NULL AUTO_INCREMENT,
+  `authority` VARCHAR(45) NOT NULL,
+  `users_iduser` INT NOT NULL,
+  PRIMARY KEY (`idauthority`),
+  INDEX `fk_authorities_users1_idx` (`users_iduser` ASC),
+  CONSTRAINT `fk_authorities_users1`
+    FOREIGN KEY (`users_iduser`)
+    REFERENCES `test-system-db`.`users` (`iduser`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -172,9 +157,16 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`tests` (
   `idtest` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `descritption` VARCHAR(400) NOT NULL,
-  `deadline` TIMESTAMP NOT NULL,
+  `deadline` DATETIME NOT NULL,
   `duration` INT NOT NULL,
-  PRIMARY KEY (`idtest`))
+  `users_iduser` INT NOT NULL,
+  PRIMARY KEY (`idtest`),
+  INDEX `fk_tests_users1_idx` (`users_iduser` ASC),
+  CONSTRAINT `fk_tests_users1`
+    FOREIGN KEY (`users_iduser`)
+    REFERENCES `test-system-db`.`users` (`iduser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -190,13 +182,13 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`tests_has_questions` (
   CONSTRAINT `fk_tests_has_questions_tests1`
     FOREIGN KEY (`tests_idtest`)
     REFERENCES `test-system-db`.`tests` (`idtest`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_tests_has_questions_questions1`
     FOREIGN KEY (`questions_idquestions`)
     REFERENCES `test-system-db`.`questions` (`idquestion`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -229,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_assigned_tests` (
   `idassigned_test` INT NOT NULL AUTO_INCREMENT,
   `users_iduser` INT NOT NULL,
   `tests_idtest` INT NOT NULL,
+  `isSubmitted` TINYINT(1) NOT NULL,
   PRIMARY KEY (`idassigned_test`),
   INDEX `fk_users_has_tests1_tests1_idx` (`tests_idtest` ASC),
   INDEX `fk_users_has_tests1_users1_idx` (`users_iduser` ASC),
@@ -269,11 +262,12 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`answeredQuestions`
+-- Table `test-system-db`.`submittedQuestions`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`answeredQuestions` (
+CREATE TABLE IF NOT EXISTS `test-system-db`.`submittedQuestions` (
   `idassigned_test` INT NOT NULL,
   `idquestion` INT NOT NULL,
+  `feedback` VARCHAR(200) NULL,
   PRIMARY KEY (`idassigned_test`, `idquestion`),
   INDEX `fk_users_has_assigned_tests_has_questions_questions1_idx` (`idquestion` ASC),
   INDEX `fk_users_has_assigned_tests_has_questions_users_has_assigne_idx` (`idassigned_test` ASC),
@@ -294,22 +288,22 @@ ENGINE = InnoDB;
 -- Table `test-system-db`.`answeredQuestions_has_answers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`answeredQuestions_has_answers` (
-  `answeredQuestions_idassigned_test` INT NOT NULL,
-  `answeredQuestions_idquestion` INT NOT NULL,
   `answers_idanswer` INT NOT NULL,
+  `submittedQuestions_idassigned_test` INT NOT NULL,
+  `submittedQuestions_idquestion` INT NOT NULL,
   `givenAnswer` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`answeredQuestions_idassigned_test`, `answeredQuestions_idquestion`, `answers_idanswer`),
+  PRIMARY KEY (`answers_idanswer`, `submittedQuestions_idassigned_test`, `submittedQuestions_idquestion`),
   INDEX `fk_answeredQuestions_has_answers_answers1_idx` (`answers_idanswer` ASC),
-  INDEX `fk_answeredQuestions_has_answers_answeredQuestions1_idx` (`answeredQuestions_idassigned_test` ASC, `answeredQuestions_idquestion` ASC),
-  CONSTRAINT `fk_answeredQuestions_has_answers_answeredQuestions1`
-    FOREIGN KEY (`answeredQuestions_idassigned_test` , `answeredQuestions_idquestion`)
-    REFERENCES `test-system-db`.`answeredQuestions` (`idassigned_test` , `idquestion`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+  INDEX `fk_answeredQuestions_has_answers_submittedQuestions1_idx` (`submittedQuestions_idassigned_test` ASC, `submittedQuestions_idquestion` ASC),
   CONSTRAINT `fk_answeredQuestions_has_answers_answers1`
     FOREIGN KEY (`answers_idanswer`)
     REFERENCES `test-system-db`.`answers` (`idanswer`)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_answeredQuestions_has_answers_submittedQuestions1`
+    FOREIGN KEY (`submittedQuestions_idassigned_test` , `submittedQuestions_idquestion`)
+    REFERENCES `test-system-db`.`submittedQuestions` (`idassigned_test` , `idquestion`)
+    ON DELETE NO ACTION
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
@@ -319,13 +313,153 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
+-- Data for table `test-system-db`.`categories`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`categories` (`idcategory`, `name`) VALUES (1, 'geography');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`subcategories`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`subcategories` (`idsubcategory`, `name`, `categories_idcategory`) VALUES (1, 'elementary', 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`users`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (1, 'John', 'Wayne', 'Cowboy', 'j.wayne@mail.com', 'test123', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (2, 'Yen', 'Johnson', 'Cowboy', 'y.johnson@mail.com', 'test123', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (3, 'Joe', 'Deere', 'Cowboy', 'j.deere@mail.com', 'test123', 'qwerty', 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`questions`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (1, 'What is the capital of Germany?', 0, 1, 1);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (2, 'What is the capital of Japan?', 0, 1, 2);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (3, 'What is the capital of Italy?', 0, 1, 3);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (4, 'Which of these are real countries?', 1, 1, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`answers`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (1, 1, 'Rogachev', 1);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (2, 1, 'Minsk', 1);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (3, 1, 'Bobruisk', 1);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (4, 0, 'Berlin', 1);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (5, 0, 'Tokio', 2);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (6, 1, 'Berlin', 2);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (7, 1, 'Kioto', 2);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (8, 1, 'Phnom-Penh', 2);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (9, 0, 'Roma', 3);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (10, 1, 'Borisov', 3);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (11, 1, 'Cherepovets', 3);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (12, 1, 'Samarkand', 3);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (13, 0, 'Belarus', 4);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (14, 0, 'Russia', 4);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (15, 0, 'Poland', 4);
+INSERT INTO `test-system-db`.`answers` (`idanswer`, `isFalse`, `body`, `questions_idquestion`) VALUES (16, 1, 'Wakanda', 4);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`tags`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`tags` (`idtag`, `name`) VALUES (1, 'basic geography');
+INSERT INTO `test-system-db`.`tags` (`idtag`, `name`) VALUES (2, 'rivers');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`questions_has_tags`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`questions_has_tags` (`questions_idquestions`, `tags_idtag`) VALUES (1, 1);
+INSERT INTO `test-system-db`.`questions_has_tags` (`questions_idquestions`, `tags_idtag`) VALUES (2, 1);
+INSERT INTO `test-system-db`.`questions_has_tags` (`questions_idquestions`, `tags_idtag`) VALUES (3, 1);
+INSERT INTO `test-system-db`.`questions_has_tags` (`questions_idquestions`, `tags_idtag`) VALUES (4, 1);
+INSERT INTO `test-system-db`.`questions_has_tags` (`questions_idquestions`, `tags_idtag`) VALUES (1, 2);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `test-system-db`.`authorities`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`) VALUES (1, 'ROLE_ADMIN');
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`) VALUES (2, 'ROLE_USER');
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`) VALUES (3, 'ROLE_GUEST');
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (1, 'ROLE_ADMIN', 1);
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (2, 'ROLE_USER', 2);
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (3, 'ROLE_USER', 3);
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (4, 'ROLE_ADMIN', 3);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`tests`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`tests` (`idtest`, `name`, `descritption`, `deadline`, `duration`, `users_iduser`) VALUES (1, 'basic geography test', 'for app testing', '2019-04-26 09:34:00.000', 600, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`tests_has_questions`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`tests_has_questions` (`tests_idtest`, `questions_idquestions`) VALUES (1, 1);
+INSERT INTO `test-system-db`.`tests_has_questions` (`tests_idtest`, `questions_idquestions`) VALUES (1, 2);
+INSERT INTO `test-system-db`.`tests_has_questions` (`tests_idtest`, `questions_idquestions`) VALUES (1, 3);
+INSERT INTO `test-system-db`.`tests_has_questions` (`tests_idtest`, `questions_idquestions`) VALUES (1, 4);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`users_has_tests`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`users_has_tests` (`users_iduser`, `tests_idtest`) VALUES (1, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`users_has_subscribers`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`, `groupName`) VALUES (1, 2, 'students');
+INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`, `groupName`) VALUES (1, 3, 'students');
 
 COMMIT;
 

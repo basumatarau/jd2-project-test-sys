@@ -15,4 +15,4 @@
 **environment: tomcat9, spring-core v.5.x, spring-security v.5.x, hibernate v.5.x, MariaDB v.10.3**
 
 db schema:
-![](dbschema-pic.png)
+![](db-schema-pic.png)
