@@ -8,6 +8,8 @@ import java.util.Set;
 @Table(name = "users_has_assigned_tests")
 public class SubmittedTest {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idassigned_test")
     private int id;
 
@@ -47,11 +49,12 @@ public class SubmittedTest {
         if (o == null || getClass() != o.getClass()) return false;
         SubmittedTest that = (SubmittedTest) o;
         return id == that.id &&
-                isSubmitted == that.isSubmitted;
+                Objects.equals(assignee, that.assignee) &&
+                Objects.equals(masterTest, that.masterTest);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isSubmitted);
+        return Objects.hash(id, assignee, masterTest);
     }
 }

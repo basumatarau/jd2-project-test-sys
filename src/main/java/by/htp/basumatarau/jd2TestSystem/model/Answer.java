@@ -56,12 +56,11 @@ public class Answer {
         if (o == null || getClass() != o.getClass()) return false;
         Answer answer = (Answer) o;
         return id == answer.id &&
-                isFalse == answer.isFalse &&
                 Objects.equals(body, answer.body);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isFalse, body);
+        return Objects.hash(id, body);
     }
 }
