@@ -7,14 +7,17 @@ import java.util.Objects;
 @Table(name = "answeredQuestions_has_answers")
 public class SubmittedAnswer {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idsubmittedAnswer")
+    private int id;
+
     //the given answer may be of any type (in this case it's boolean for simplicity)
     @Column(name = "givenAnswer")
     private boolean givenAnswer;
 
     @ManyToOne
-    @JoinColumns(
-            value = {@JoinColumn(name = "submittedQuestions_idassigned_test"),
-            @JoinColumn(name = "submittedQuestions_idquestion")})
+    @JoinColumn(name = "submittedQuestions_idsubmittedQuestion")
     private SubmittedQuestion submittedQuestion;
 
     @ManyToOne

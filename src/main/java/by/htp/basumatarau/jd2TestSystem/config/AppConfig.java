@@ -7,7 +7,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import static org.hibernate.cfg.Environment.*;
+
+import static org.hibernate.cfg.AvailableSettings.*;
+
 import java.util.Properties;
 
 @Configuration
@@ -15,6 +17,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScans(value =
         {@ComponentScan("by.htp.basumatarau.jd2TestSystem.service"),
+        @ComponentScan("by.htp.basumatarau.jd2TestSystem.service.auth"),
         @ComponentScan("by.htp.basumatarau.jd2TestSystem.dao")})
 public class AppConfig {
 
@@ -26,14 +29,14 @@ public class AppConfig {
         LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
         Properties properties = new Properties();
 
-        properties.put(DRIVER, "mysql.driver");
-        properties.put(URL, "mysql.jdbcUrl");
-        properties.put(USER, "mysql.username");
-        properties.put(PASS, "mysql.password");
+        properties.put(DRIVER, environment.getProperty("mysql.driver"));
+        properties.put(URL, environment.getProperty("mysql.jdbcUrl"));
+        properties.put(USER, environment.getProperty("mysql.username"));
+        properties.put(PASS, environment.getProperty("mysql.password"));
 
-        properties.put(SHOW_SQL, "hibernate.show_sql");
+        properties.put(SHOW_SQL, environment.getProperty("hibernate.show_sql"));
         //todo schema validation fix
-        //properties.put(HBM2DDL_AUTO, "hibernate.hbm2ddl.auto");
+        //properties.put(HBM2DDL_AUTO, environment.getProperty("hibernate.hbm2ddl.auto"));
 
         properties.put(C3P0_MIN_SIZE, environment.getProperty("hibernate.c3p0.min_size"));
         properties.put(C3P0_MAX_SIZE, environment.getProperty("hibernate.c3p0.max_size"));
@@ -50,7 +53,10 @@ public class AppConfig {
                 Subcategory.class,
                 Tag.class,
                 Test.class,
-                User.class
+                User.class,
+                Assignment.class,
+                SubmittedQuestion.class,
+                SubmittedAnswer.class
         );
 
         return factoryBean;

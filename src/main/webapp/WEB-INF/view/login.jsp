@@ -17,8 +17,8 @@
 <body>
 	<h3>Test system login page</h3>
 
-	<form:form action="${pageContext.request.contextPath}/authenticateTheUser"
-			   method="POST">
+	<form:form action="${pageContext.request.contextPath}/loginAction"
+			   method="post">
 
 		<!-- Check for login error -->
 	
@@ -29,7 +29,7 @@
 		</c:if>
 			
 		<p>
-			User name: <input type="text" name="login" />
+			User name: <input type="text" name="username" />
 		</p>
 
 		<p>

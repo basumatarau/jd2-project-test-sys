@@ -51,7 +51,7 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "users_iduser")},
             joinColumns = {@JoinColumn(name = "users_idsubscriber")}
     )
-    private Set<User> peers;
+    private Set<User> assigners;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -59,18 +59,10 @@ public class User {
             joinColumns = {@JoinColumn(name = "users_iduser")},
             inverseJoinColumns = {@JoinColumn(name = "tests_idtest")}
     )
-    private Set<Test> handedOverTests;
-
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "users_has_assigned_tests",
-            joinColumns = {@JoinColumn(name = "users_iduser")},
-            inverseJoinColumns = {@JoinColumn(name = "tests_idtest")}
-    )
-    private Set<Test> assignedTests;
+    private Set<Test> managedTests;
 
     @OneToMany(mappedBy = "assignee")
-    private Set<SubmittedTest> submittedTestSet;
+    private Set<Assignment> assignmentSet;
 
     @OneToMany(mappedBy = "author")
     private Set<Test> authoredTests;
@@ -140,6 +132,14 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public Set<Authority> getAuthoritySet() {
+        return authoritySet;
+    }
+
+    public void setAuthoritySet(Set<Authority> authoritySet) {
+        this.authoritySet = authoritySet;
     }
 
     @Override

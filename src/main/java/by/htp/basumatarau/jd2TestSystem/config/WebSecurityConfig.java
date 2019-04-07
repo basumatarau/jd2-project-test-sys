@@ -26,14 +26,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .hasAnyRole("ADMIN", "USER", "GUEST")
                 .and()
-                    .formLogin()
-                    .loginPage("/login-page")
-                    .loginProcessingUrl("/authenticateTheUser")
+                    .authorizeRequests()
+                    .antMatchers("/login**")
                     .permitAll()
                 .and()
-                    .logout().permitAll()
+                    .formLogin()
+                    .loginPage("/login")
+                    .loginProcessingUrl("/loginAction")
+                    .permitAll()
                 .and()
-                    .exceptionHandling().accessDeniedPage("/access-denied");
+                    .logout()
+                    .logoutSuccessUrl("/login")
+                    .permitAll()
+                .and()
+                    .exceptionHandling().accessDeniedPage("/access-denied")
+                .and()
+                    .csrf().disable();
+        //todo fix the cfg
     }
 
     @Override

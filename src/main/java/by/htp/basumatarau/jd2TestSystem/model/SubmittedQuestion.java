@@ -8,13 +8,17 @@ import java.util.Set;
 @Table(name = "submittedQuestions")
 public class SubmittedQuestion {
 
-    //todo: nullable?
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idsubmittedQuestion")
+    private int id;
+
     @Column(name = "feedback")
     private String feedback;
 
     @ManyToOne
     @JoinColumn(name = "idassigned_test")
-    private SubmittedTest submittedTest;
+    private Assignment submittedTest;
 
     @ManyToOne
     @JoinColumn(name = "idquestion")
@@ -31,11 +35,11 @@ public class SubmittedQuestion {
         this.feedback = feedback;
     }
 
-    public SubmittedTest getSubmittedTest() {
+    public Assignment getSubmittedTest() {
         return submittedTest;
     }
 
-    public void setSubmittedTest(SubmittedTest submittedTest) {
+    public void setSubmittedTest(Assignment submittedTest) {
         this.submittedTest = submittedTest;
     }
 

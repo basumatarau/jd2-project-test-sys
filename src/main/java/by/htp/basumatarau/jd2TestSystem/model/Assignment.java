@@ -6,7 +6,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users_has_assigned_tests")
-public class SubmittedTest {
+public class Assignment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,7 +47,7 @@ public class SubmittedTest {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        SubmittedTest that = (SubmittedTest) o;
+        Assignment that = (Assignment) o;
         return id == that.id &&
                 Objects.equals(assignee, that.assignee) &&
                 Objects.equals(masterTest, that.masterTest);

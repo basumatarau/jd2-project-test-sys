@@ -29,19 +29,14 @@ public class Test {
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "users_has_assigned_tests",
-            inverseJoinColumns = {@JoinColumn(name = "users_iduser")},
-            joinColumns = {@JoinColumn(name = "tests_idtest")}
-    )
-    private Set<User> assignees;
-
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
             name = "users_has_tests",
             inverseJoinColumns = {@JoinColumn(name = "users_iduser")},
             joinColumns = {@JoinColumn(name = "tests_idtest")}
     )
     private Set<User> users;
+
+    @OneToMany(mappedBy = "masterTest")
+    private Set<Assignment> assignmentSet;
 
     @ManyToOne
     @JoinColumn(name = "users_iduser")
@@ -56,7 +51,7 @@ public class Test {
     private Set<Question> questionSet;
 
     @OneToMany(mappedBy = "masterTest")
-    private Set<SubmittedTest> submittedTestSet;
+    private Set<Assignment> submittedTestSet;
 
     public int getId() {
         return id;
