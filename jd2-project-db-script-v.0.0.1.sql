@@ -13,6 +13,15 @@ DROP SCHEMA IF EXISTS `test-system-db` ;
 -- Schema test-system-db
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `test-system-db` DEFAULT CHARACTER SET utf8 ;
+-- -----------------------------------------------------
+-- Schema boraji
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `boraji` ;
+
+-- -----------------------------------------------------
+-- Schema boraji
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `boraji` DEFAULT CHARACTER SET latin1 ;
 USE `test-system-db` ;
 
 -- -----------------------------------------------------
@@ -51,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`users` (
   `lastName` VARCHAR(60) NULL,
   `nickName` VARCHAR(45) NOT NULL,
   `email` VARCHAR(60) NOT NULL,
-  `password` VARCHAR(80) NOT NULL,
+  `password` VARCHAR(120) NOT NULL,
   `salt` VARCHAR(60) NOT NULL,
   `isEnabled` TINYINT(1) NOT NULL,
   PRIMARY KEY (`iduser`))
@@ -265,10 +274,11 @@ ENGINE = InnoDB;
 -- Table `test-system-db`.`submittedQuestions`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`submittedQuestions` (
+  `idsubmittedQuestion` INT NOT NULL AUTO_INCREMENT,
   `idassigned_test` INT NOT NULL,
   `idquestion` INT NOT NULL,
   `feedback` VARCHAR(200) NULL,
-  PRIMARY KEY (`idassigned_test`, `idquestion`),
+  PRIMARY KEY (`idsubmittedQuestion`),
   INDEX `fk_users_has_assigned_tests_has_questions_questions1_idx` (`idquestion` ASC),
   INDEX `fk_users_has_assigned_tests_has_questions_users_has_assigne_idx` (`idassigned_test` ASC),
   CONSTRAINT `fk_users_has_assigned_tests_has_questions_users_has_assigned_1`
@@ -285,27 +295,54 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`answeredQuestions_has_answers`
+-- Table `test-system-db`.`submittedQuestions_has_answers`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`answeredQuestions_has_answers` (
+CREATE TABLE IF NOT EXISTS `test-system-db`.`submittedQuestions_has_answers` (
+  `idsubmittedAnswer` INT NOT NULL AUTO_INCREMENT,
   `answers_idanswer` INT NOT NULL,
-  `submittedQuestions_idassigned_test` INT NOT NULL,
-  `submittedQuestions_idquestion` INT NOT NULL,
+  `submittedQuestions_idsubmittedQuestion` INT NOT NULL,
   `givenAnswer` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`answers_idanswer`, `submittedQuestions_idassigned_test`, `submittedQuestions_idquestion`),
+  PRIMARY KEY (`idsubmittedAnswer`),
   INDEX `fk_answeredQuestions_has_answers_answers1_idx` (`answers_idanswer` ASC),
-  INDEX `fk_answeredQuestions_has_answers_submittedQuestions1_idx` (`submittedQuestions_idassigned_test` ASC, `submittedQuestions_idquestion` ASC),
+  INDEX `fk_answeredQuestions_has_answers_submittedQuestions1_idx` (`submittedQuestions_idsubmittedQuestion` ASC),
   CONSTRAINT `fk_answeredQuestions_has_answers_answers1`
     FOREIGN KEY (`answers_idanswer`)
     REFERENCES `test-system-db`.`answers` (`idanswer`)
     ON DELETE RESTRICT
     ON UPDATE CASCADE,
   CONSTRAINT `fk_answeredQuestions_has_answers_submittedQuestions1`
-    FOREIGN KEY (`submittedQuestions_idassigned_test` , `submittedQuestions_idquestion`)
-    REFERENCES `test-system-db`.`submittedQuestions` (`idassigned_test` , `idquestion`)
-    ON DELETE NO ACTION
+    FOREIGN KEY (`submittedQuestions_idsubmittedQuestion`)
+    REFERENCES `test-system-db`.`submittedQuestions` (`idsubmittedQuestion`)
+    ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+USE `boraji` ;
+
+-- -----------------------------------------------------
+-- Table `boraji`.`USERS`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `boraji`.`USERS` (
+  `USERNAME` VARCHAR(50) NOT NULL,
+  `PASSWORD` VARCHAR(100) NOT NULL,
+  `ENABLED` TINYINT(1) NOT NULL,
+  PRIMARY KEY (`USERNAME`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `boraji`.`AUTHORITIES`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `boraji`.`AUTHORITIES` (
+  `USERNAME` VARCHAR(50) NOT NULL,
+  `AUTHORITY` VARCHAR(50) NOT NULL,
+  UNIQUE INDEX `ix_auth_username` (`USERNAME` ASC, `AUTHORITY` ASC),
+  CONSTRAINT `fk_authorities_users`
+    FOREIGN KEY (`USERNAME`)
+    REFERENCES `boraji`.`USERS` (`USERNAME`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -337,9 +374,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (1, 'John', 'Wayne', 'Cowboy', 'j.wayne@mail.com', 'test123', 'qwerty', 1);
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (2, 'Yen', 'Johnson', 'Cowboy', 'y.johnson@mail.com', 'test123', 'qwerty', 1);
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (3, 'Joe', 'Deere', 'Cowboy', 'j.deere@mail.com', 'test123', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (1, 'John', 'Wayne', 'Cowboy', 'j.wayne@mail.com', '$2a$10$qxQLGPs/uokzZavKx8.NKuAcYhLv1vDyBW4qbYAtSA5zeMsoG8tTa', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (2, 'Yen', 'Johnson', 'Cowboy', 'y.johnson@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (3, 'Joe', 'Deere', 'Cowboy', 'j.deere@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 'qwerty', 1);
 
 COMMIT;
 
