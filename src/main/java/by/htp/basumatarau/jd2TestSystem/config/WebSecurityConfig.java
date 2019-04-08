@@ -22,15 +22,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-                    .anyRequest()
-                    .hasAnyRole("ADMIN", "USER", "GUEST")
-                .and()
-                    .authorizeRequests()
-                    .antMatchers("/login**")
-                    .permitAll()
-                .and()
-                    .formLogin()
+        http.formLogin()
                     .loginPage("/login")
                     .loginProcessingUrl("/loginAction")
                     .usernameParameter("custom_username")
@@ -43,7 +35,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/login")
                     .permitAll()
                 .and()
-                    .exceptionHandling().accessDeniedPage("/access-denied")
+                    .authorizeRequests()
+                    .antMatchers("/", "/login**")
+                    .permitAll()
+                .and()
+                    .authorizeRequests()
+                    .antMatchers("/assignment-manager**",
+                            "/subscribers**",
+                            "/subscription**")
+                    .hasAnyRole("ADMIN", "USER", "GUEST")
+                .and()
+                    .exceptionHandling()
+                    .accessDeniedPage("/access-denied")
                 .and()
                     .csrf().disable();
         //todo fix the cfg

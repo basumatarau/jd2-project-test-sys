@@ -7,10 +7,10 @@
 			<a href="<spring:url value="/"/>" class="navbar-brand">Test system home</a>
 		</div>
 		<ul class="nav navbar-nav">
-			<li><a href="<spring:url value="/authored-tests/"/>">My tests</a></li>
-			<li><a href="<spring:url value="/assigned-tests/" />">Assigned tests</a></li>
-			<li><a href="<spring:url value="/subscribers/" />">Subscribers</a></li>
-			<li><a href="<spring:url value="/subscription/" />">Subscription</a></li>
+
+			<li><a href="<spring:url value="/assignment-manager"/>">Assignment Manager</a></li>
+			<li><a href="<spring:url value="/subscribers" />">Subscribers</a></li>
+			<li><a href="<spring:url value="/subscription" />">Subscription</a></li>
 
 			<sec:authorize access="authenticated" var="authenticated" />
 
