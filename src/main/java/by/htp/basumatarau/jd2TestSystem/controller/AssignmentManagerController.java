@@ -17,10 +17,10 @@ import java.util.List;
 public class AssignmentManagerController {
 
     @Autowired
-    AssignmentService assignmentService;
+    private AssignmentService assignmentService;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping("/assignment-manager")
     public String assigmentManager(Model model, Principal principal){
