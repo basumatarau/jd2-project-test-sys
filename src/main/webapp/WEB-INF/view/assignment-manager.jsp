@@ -17,5 +17,13 @@
        		<li><a href="${pageContext.request.contextPath}/assignment-manager/my-tests"/>my tests</a></li>
        </ul>
 
+       <p>name: ${username}</p>
+       <p>name: ${id}</p>
+       <p>name: ${email}</p>
+       <p>asdf: ${assignmentList.size()}</p>
+
+        <c:forEach items="${assignmentList}" var="assignment">
+            <p>${assignment.name}</p>
+        </c:forEach>
 </body>
 </html>

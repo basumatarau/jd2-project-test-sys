@@ -17,7 +17,7 @@ import java.util.Properties;
 @EnableTransactionManagement
 @ComponentScans(value =
         {@ComponentScan("by.htp.basumatarau.jd2TestSystem.service"),
-        @ComponentScan("by.htp.basumatarau.jd2TestSystem.service.auth"),
+        @ComponentScan("by.htp.basumatarau.jd2TestSystem.service.impl.auth"),
         @ComponentScan("by.htp.basumatarau.jd2TestSystem.dao")})
 public class AppConfig {
 

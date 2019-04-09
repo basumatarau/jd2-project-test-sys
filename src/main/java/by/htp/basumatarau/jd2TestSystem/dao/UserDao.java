@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserDao {
     User findUserByEmail(String email);
+    User getUserByUserId(Integer id);
     List<User> getUsers(int idAfter, int amount);
     void persist(User newUser);
     void update(User user);

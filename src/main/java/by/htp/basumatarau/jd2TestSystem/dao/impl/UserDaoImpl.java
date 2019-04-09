@@ -34,6 +34,24 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    public User getUserByUserId(Integer id) {
+        User result = null;
+        Query<User> query = sessionFactory.getCurrentSession()
+                .createQuery("from User u " +
+                        "join fetch u.authoritySet " +
+                        "where u.email=:id ", User.class);
+        query.setParameter("id", id.toString());
+        List<User> resultList = query.getResultList();
+
+        if(resultList.size()!=1){
+            //todo handle exception? log? or something else?
+        }else{
+            result = resultList.get(0);
+        }
+        return result;
+    }
+
+    @Override
     public List<User> getUsers(int idAfter, int amount) {
         return null;
     }

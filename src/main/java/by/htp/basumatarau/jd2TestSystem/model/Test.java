@@ -1,7 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.model;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -17,15 +16,14 @@ public class Test {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "descritption")
     private String description;
-
-    @Column(name = "deadline", columnDefinition = "DATETIME")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date deadline;
 
     @Column(name = "duration")
     private int duration;
+
+    @Column(name = "isPublic")
+    private boolean isPublic;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -53,6 +51,54 @@ public class Test {
     @OneToMany(mappedBy = "masterTest")
     private Set<Assignment> submittedTestSet;
 
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
+    }
+
+    public Set<Assignment> getAssignmentSet() {
+        return assignmentSet;
+    }
+
+    public void setAssignmentSet(Set<Assignment> assignmentSet) {
+        this.assignmentSet = assignmentSet;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public Set<Question> getQuestionSet() {
+        return questionSet;
+    }
+
+    public void setQuestionSet(Set<Question> questionSet) {
+        this.questionSet = questionSet;
+    }
+
+    public Set<Assignment> getSubmittedTestSet() {
+        return submittedTestSet;
+    }
+
+    public void setSubmittedTestSet(Set<Assignment> submittedTestSet) {
+        this.submittedTestSet = submittedTestSet;
+    }
+
     public int getId() {
         return id;
     }
@@ -77,14 +123,6 @@ public class Test {
         this.description = description;
     }
 
-    public Date getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(Date deadline) {
-        this.deadline = deadline;
-    }
-
     public int getDuration() {
         return duration;
     }
@@ -100,13 +138,14 @@ public class Test {
         Test test = (Test) o;
         return id == test.id &&
                 duration == test.duration &&
+                isPublic == test.isPublic &&
                 Objects.equals(name, test.name) &&
                 Objects.equals(description, test.description) &&
-                Objects.equals(deadline, test.deadline);
+                Objects.equals(author, test.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, deadline, duration);
+        return Objects.hash(id, name, description, duration, isPublic, author);
     }
 }

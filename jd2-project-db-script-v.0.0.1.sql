@@ -166,9 +166,9 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`tests` (
   `idtest` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(100) NOT NULL,
   `descritption` VARCHAR(400) NOT NULL,
-  `deadline` DATETIME NOT NULL,
   `duration` INT NOT NULL,
   `users_iduser` INT NOT NULL,
+  `isPublic` TINYINT(1) NOT NULL,
   PRIMARY KEY (`idtest`),
   INDEX `fk_tests_users1_idx` (`users_iduser` ASC),
   CONSTRAINT `fk_tests_users1`
@@ -228,14 +228,19 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_assigned_tests` (
   `idassigned_test` INT NOT NULL AUTO_INCREMENT,
-  `users_iduser` INT NOT NULL,
   `tests_idtest` INT NOT NULL,
+  `users_iduser_assignee` INT NOT NULL,
+  `users_iduser_assigner` INT NOT NULL,
   `isSubmitted` TINYINT(1) NOT NULL,
+  `deadline` DATETIME NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `details` VARCHAR(200) NULL,
   PRIMARY KEY (`idassigned_test`),
   INDEX `fk_users_has_tests1_tests1_idx` (`tests_idtest` ASC),
-  INDEX `fk_users_has_tests1_users1_idx` (`users_iduser` ASC),
+  INDEX `fk_users_has_tests1_users1_idx` (`users_iduser_assignee` ASC),
+  INDEX `fk_users_has_assigned_tests_users1_idx` (`users_iduser_assigner` ASC),
   CONSTRAINT `fk_users_has_tests1_users1`
-    FOREIGN KEY (`users_iduser`)
+    FOREIGN KEY (`users_iduser_assignee`)
     REFERENCES `test-system-db`.`users` (`iduser`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
@@ -243,7 +248,12 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_assigned_tests` (
     FOREIGN KEY (`tests_idtest`)
     REFERENCES `test-system-db`.`tests` (`idtest`)
     ON DELETE CASCADE
-    ON UPDATE CASCADE)
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_assigned_tests_users1`
+    FOREIGN KEY (`users_iduser_assigner`)
+    REFERENCES `test-system-db`.`users` (`iduser`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -462,7 +472,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`tests` (`idtest`, `name`, `descritption`, `deadline`, `duration`, `users_iduser`) VALUES (1, 'basic geography test', 'for app testing', '2019-04-26 09:34:00.000', 600, 1);
+INSERT INTO `test-system-db`.`tests` (`idtest`, `name`, `descritption`, `duration`, `users_iduser`, `isPublic`) VALUES (1, 'basic geography test', 'for app testing', 600, 1, 1);
 
 COMMIT;
 
@@ -486,6 +496,17 @@ COMMIT;
 START TRANSACTION;
 USE `test-system-db`;
 INSERT INTO `test-system-db`.`users_has_tests` (`users_iduser`, `tests_idtest`) VALUES (1, 1);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`users_has_assigned_tests`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`users_has_assigned_tests` (`idassigned_test`, `tests_idtest`, `users_iduser_assignee`, `users_iduser_assigner`, `isSubmitted`, `deadline`, `name`, `details`) VALUES (1, 1, 2, 1, 0, '2019-04-26 09:34:00.000', 'someAssignmentName', 'someAssignmentDetails');
+INSERT INTO `test-system-db`.`users_has_assigned_tests` (`idassigned_test`, `tests_idtest`, `users_iduser_assignee`, `users_iduser_assigner`, `isSubmitted`, `deadline`, `name`, `details`) VALUES (2, 1, 3, 1, 0, '2019-04-26 09:34:00.000', 'someAssignmentName', 'someAssignmentDetails');
 
 COMMIT;
 
