@@ -44,7 +44,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizeRequests()
                     .antMatchers("/assignment-manager**",
                             "/subscribers**",
-                            "/subscription**")
+                            "/subscription**",
+                            "/my-assignments**")
                     .hasAnyRole("ADMIN", "USER", "GUEST")
                 .and()
                     .exceptionHandling()
@@ -55,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
 
         //salt source to be configured here...

@@ -6,6 +6,12 @@ import by.htp.basumatarau.jd2TestSystem.model.User;
 import java.util.List;
 
 public interface AssignmentService {
-    List<Assignment> getAssignmentsForAssigner(User user);
-    List<Assignment> getAssignmentsForAssignee(User user);
+    List<Assignment> getAllAssignmentsForAssigner(User user);
+    List<Assignment> getAllAssignmentsForAssignee(User user);
+    List<Assignment> getAssignmentsForAssigner(User user, int idAfter, int entries);
+    List<Assignment> getAssignmentsForAssignee(User user, int idAfter, int entries);
+    long getNumberOfManagedAssignments(User assigner);
+    long getNumberOfAssignmentsForAssignee(User assignee);
+    void deleteAssignment(Assignment assignment);
+    Assignment getAssignmentById(int id);
 }

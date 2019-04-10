@@ -39,8 +39,8 @@ public class UserDaoImpl implements UserDao {
         Query<User> query = sessionFactory.getCurrentSession()
                 .createQuery("from User u " +
                         "join fetch u.authoritySet " +
-                        "where u.email=:id ", User.class);
-        query.setParameter("id", id.toString());
+                        "where u.id=:id ", User.class);
+        query.setParameter("id", id);
         List<User> resultList = query.getResultList();
 
         if(resultList.size()!=1){

@@ -16,8 +16,8 @@ import java.security.Principal;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/assignment-manager")
-public class AssignmentManagerController {
+@RequestMapping(value = "/my-assignments")
+public class MyAssignmentsController {
 
     private static final int ENTRIES_PER_PAGE = 10;
 
@@ -28,53 +28,48 @@ public class AssignmentManagerController {
     private UserService userService;
 
     @RequestMapping
-    public String assigmentManager(
+    public String myAssignments(
             @RequestParam(value = "page", required = false) Integer page,
-                    Model model,
-                    Principal principal){
+            Model model,
+            Principal principal){
+
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User assigner = userService.getUserByUserId(customUser.getId());
-        long assignmentListSize = assignmentService.getNumberOfManagedAssignments(assigner);
+        User assignee = userService.getUserByUserId(customUser.getId());
+        long assignmentListSize = assignmentService.getNumberOfAssignmentsForAssignee(assignee);
 
         int topPageEntry = 0;
         if(page!=null){
             topPageEntry = (page - 1)*ENTRIES_PER_PAGE;
         }
-        List<Assignment> assignmentList
-                = assignmentService.getAssignmentsForAssigner(assigner, topPageEntry, ENTRIES_PER_PAGE);
+
+        List<Assignment> assignmentList = null;
+        if(assignmentListSize != 0){
+            assignmentList = assignmentService
+                                .getAssignmentsForAssignee(
+                                        assignee,
+                                        topPageEntry,
+                                        ENTRIES_PER_PAGE
+                                );
+        }
 
         model.addAttribute("startpage",1);
         model.addAttribute("endpage", ((int) (1 + (assignmentListSize / ENTRIES_PER_PAGE))));
         model.addAttribute("assignmentList", assignmentList);
 
-        return "assignment-manager";
+        return "my-assignments";
     }
 
-    @RequestMapping(value = "/deleteAssignment")
-    public String deleteAssignment(
-            @RequestParam("id") Integer id,
+
+    @RequestMapping(value = "/start")
+    public String startAssignment(
+            @RequestParam(value = "id") Integer id,
             Model model,
             Principal principal){
+        CustomUser customUser
+                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        assignmentService.deleteAssignment(assignmentService.getAssignmentById(id));
-        return assigmentManager(1, model, principal);
+       //todo
+        return "home";
     }
-
-    @RequestMapping(value = "/test-bank")
-    public String testBankPage(){
-        return "test-bank";
-    }
-
-    @RequestMapping(value = "/my-tests")
-    public String myTestsPage(){
-        return "my-tests";
-    }
-
-    @RequestMapping(value = "/test-constructor")
-    public String newAssignment(){
-        return "test-constructor";
-    }
-
 }

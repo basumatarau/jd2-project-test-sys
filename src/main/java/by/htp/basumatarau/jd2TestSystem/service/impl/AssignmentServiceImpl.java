@@ -14,17 +14,53 @@ import java.util.List;
 public class AssignmentServiceImpl implements AssignmentService {
 
     @Autowired
-    AssignmentDao assignmentDao;
+    private AssignmentDao assignmentDao;
 
     @Transactional
     @Override
-    public List<Assignment> getAssignmentsForAssigner(User assigner) {
-        return assignmentDao.getAssignmentsForAssigner(assigner);
+    public void deleteAssignment(Assignment assignment) {
+        assignmentDao.deleteAssignment(assignment);
     }
 
     @Transactional
     @Override
-    public List<Assignment> getAssignmentsForAssignee(User assignee) {
-        return assignmentDao.getAssignmentsForAssignee(assignee);
+    public Assignment getAssignmentById(int id) {
+        return assignmentDao.getAssignmentById(id);
+    }
+
+    @Transactional
+    @Override
+    public long getNumberOfManagedAssignments(User assigner) {
+        return assignmentDao.getNumberOfManagedAssignments(assigner);
+    }
+
+    @Transactional
+    @Override
+    public long getNumberOfAssignmentsForAssignee(User assignee) {
+        return assignmentDao.getNumberOfAssignmentsForAssignee(assignee);
+    }
+
+    @Transactional
+    @Override
+    public List<Assignment> getAllAssignmentsForAssigner(User assigner) {
+        return assignmentDao.getAllAssignmentsForAssigner(assigner);
+    }
+
+    @Transactional
+    @Override
+    public List<Assignment> getAllAssignmentsForAssignee(User assignee) {
+        return assignmentDao.getAllAssignmentsForAssigner(assignee);
+    }
+
+    @Transactional
+    @Override
+    public List<Assignment> getAssignmentsForAssigner(User assigner, int idAfter, int entries) {
+        return assignmentDao.getAssignmentsForAssigner(assigner, idAfter, entries);
+    }
+
+    @Transactional
+    @Override
+    public List<Assignment> getAssignmentsForAssignee(User assignee, int idAfter, int entries) {
+        return assignmentDao.getAssignmentsForAssignee(assignee, idAfter, entries);
     }
 }

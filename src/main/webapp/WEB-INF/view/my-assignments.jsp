@@ -12,34 +12,19 @@
     <jsp:include page="include/default-js-css-res.jsp"/>
 </head>
 <body>
-    <jsp:include page="include/header.jsp" />
+ <jsp:include page="include/header.jsp" />
 
     <div class="container">
-
-        <h1>Assignment manager</h1>
-
-        <ul>
-            <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/test-constructor"/>test constructor</a></li>
-            </h3>
-            <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/test-bank"/>test bank</a></li>
-            </h3>
-            <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/my-tests"/>my tests</a></li>
-            </h3>
-        </ul>
+        <h1>My assignments</h1>
     </div>
 
     <div class="container">
-        <h2>Managed assignments</h2>
-
         <table class="table table-bordered">
             <thead>
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Assignee</th>
+                    <th scope="col">Assigner</th>
                     <th scope="col">Due date</th>
                     <th scope="col">Details</th>
                     <th scope="col" colspan="2">Submitted</th>
@@ -47,12 +32,12 @@
             </thead>
             <tbody>
                 <c:forEach items="${assignmentList}" var="assignment">
-                    <form name="assignment" id="assignment" class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/delete?id={assignment.id}" method="post">
+                    <form name="assignment" id="assignment" class="form-horizontal" action="${pageContext.request.contextPath}/my-assignments/start?id=${assignment.id}" method="post">
                         <tr>
                             <td>${assignment.id}</td>
                             <td>${assignment.name}</td>
-                            <td>${assignment.assignee.firstName} ${assignment.assignee.lastName}</td>
-                            <td>${assignment.deadline}</td>
+                            <td>${assignment.assigner.firstName} ${assignment.assigner.lastName}</td>
+                            <td>${assignment.deadline} </td>
                             <td>${assignment.details}</td>
                             <td>
                                  <c:choose>
@@ -65,8 +50,8 @@
                                  </c:choose>
                             </td>
                             <td>
-                                <button id="delete" value="delete" name="delete" class="btn btn-danger">
-                                    Delete
+                                <button id="start" value="start" name="start" class="btn btn-primary">
+                                    Start
                                 </button>
                             </td>
                         </tr>
@@ -79,7 +64,7 @@
             <ul>
                 <c:forEach begin="${startpage}" end="${endpage}" var="p">
                     <li class="page-item">
-                        <a href="${pageContext.request.contextPath}/assignment-manager?page=${p}">${p}</a>
+                        <a href="${pageContext.request.contextPath}/my-assignments?page=${p}">${p}</a>
                     </li>
                 </c:forEach>
             </ul>
