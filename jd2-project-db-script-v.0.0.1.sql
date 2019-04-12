@@ -57,13 +57,13 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users` (
   `iduser` INT NOT NULL AUTO_INCREMENT,
   `firstName` VARCHAR(60) NOT NULL,
-  `lastName` VARCHAR(60) NULL,
-  `nickName` VARCHAR(45) NOT NULL,
+  `lastName` VARCHAR(60) NOT NULL,
+  `nickName` VARCHAR(45) NULL,
   `email` VARCHAR(60) NOT NULL,
-  `password` VARCHAR(120) NOT NULL,
-  `salt` VARCHAR(60) NOT NULL,
+  `passwordHash` VARCHAR(120) NOT NULL,
   `isEnabled` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`iduser`))
+  PRIMARY KEY (`iduser`),
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC))
 ENGINE = InnoDB;
 
 
@@ -384,9 +384,9 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (1, 'John', 'Wayne', 'Cowboy', 'j.wayne@mail.com', '$2a$10$qxQLGPs/uokzZavKx8.NKuAcYhLv1vDyBW4qbYAtSA5zeMsoG8tTa', 'qwerty', 1);
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (2, 'Yen', 'Johnson', 'Cowboy', 'y.johnson@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 'qwerty', 1);
-INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `password`, `salt`, `isEnabled`) VALUES (3, 'Joe', 'Deere', 'Cowboy', 'j.deere@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 'qwerty', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `passwordHash`, `isEnabled`) VALUES (1, 'John', 'Wayne', 'Cowboy', 'j.wayne@mail.com', '$2a$10$qxQLGPs/uokzZavKx8.NKuAcYhLv1vDyBW4qbYAtSA5zeMsoG8tTa', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `passwordHash`, `isEnabled`) VALUES (2, 'Yen', 'Johnson', 'Cowboy', 'y.johnson@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 1);
+INSERT INTO `test-system-db`.`users` (`iduser`, `firstName`, `lastName`, `nickName`, `email`, `passwordHash`, `isEnabled`) VALUES (3, 'Joe', 'Deere', 'Cowboy', 'j.deere@mail.com', '$2a$10$nyXo/ByTq.43EYZqeAW.Luj4dtxZlBgCCU6qGIZrlyvDKYAck1Nbq', 1);
 
 COMMIT;
 

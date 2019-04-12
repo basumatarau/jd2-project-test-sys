@@ -2,6 +2,8 @@ package by.htp.basumatarau.jd2TestSystem.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
+import javax.servlet.ServletRegistration;
+
 public class MvcWebApplicationInitializer
         extends AbstractAnnotationConfigDispatcherServletInitializer {
     @Override
@@ -17,5 +19,12 @@ public class MvcWebApplicationInitializer
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    protected void customizeRegistration(ServletRegistration.Dynamic registration) {
+        if(!registration.setInitParameter("throwExceptionIfNoHandlerFound", "true")){
+            throw new RuntimeException();
+        }
     }
 }

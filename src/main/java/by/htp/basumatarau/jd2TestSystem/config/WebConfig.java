@@ -1,12 +1,15 @@
 package by.htp.basumatarau.jd2TestSystem.config;
 
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"by.htp.basumatarau.jd2TestSystem.controller"})
+@ComponentScans(value =
+        {@ComponentScan("by.htp.basumatarau.jd2TestSystem.controller"),
+        @ComponentScan("by.htp.basumatarau.jd2TestSystem.config.advice")})
 public class WebConfig implements WebMvcConfigurer {
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {

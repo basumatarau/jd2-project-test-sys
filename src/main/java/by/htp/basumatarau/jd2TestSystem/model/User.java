@@ -25,11 +25,8 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "salt")
-    private String salt;
+    @Column(name = "passwordHash")
+    private String passwordHash;
 
     @Column(name = "isEnabled")
     private boolean isEnabled;
@@ -110,20 +107,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public boolean isEnabled() {
@@ -153,12 +142,11 @@ public class User {
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(nickName, user.nickName) &&
                 Objects.equals(email, user.email) &&
-                Objects.equals(password, user.password) &&
-                Objects.equals(salt, user.salt);
+                Objects.equals(passwordHash, user.passwordHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, nickName, email, password, salt, isEnabled);
+        return Objects.hash(id, firstName, lastName, nickName, email, passwordHash, isEnabled);
     }
 }

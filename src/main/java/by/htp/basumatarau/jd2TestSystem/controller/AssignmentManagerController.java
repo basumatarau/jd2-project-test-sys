@@ -5,6 +5,8 @@ import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
+import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
+import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,14 +30,15 @@ public class AssignmentManagerController {
     private UserService userService;
 
     @RequestMapping
-    public String assigmentManager(
+    public String assignmentManager(
             @RequestParam(value = "page", required = false) Integer page,
                     Model model,
-                    Principal principal){
+                    Principal principal) throws ServiceException{
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User assigner = userService.getUserByUserId(customUser.getId());
+
         long assignmentListSize = assignmentService.getNumberOfManagedAssignments(assigner);
 
         int topPageEntry = 0;
@@ -56,10 +59,10 @@ public class AssignmentManagerController {
     public String deleteAssignment(
             @RequestParam("id") Integer id,
             Model model,
-            Principal principal){
+            Principal principal) throws ServiceException{
 
         assignmentService.deleteAssignment(assignmentService.getAssignmentById(id));
-        return assigmentManager(1, model, principal);
+        return assignmentManager(1, model, principal);
     }
 
     @RequestMapping(value = "/test-bank")

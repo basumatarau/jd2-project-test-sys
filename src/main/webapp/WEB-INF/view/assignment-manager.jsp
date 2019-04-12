@@ -47,7 +47,7 @@
             </thead>
             <tbody>
                 <c:forEach items="${assignmentList}" var="assignment">
-                    <form name="assignment" id="assignment" class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/delete?id={assignment.id}" method="post">
+                    <form name="assignment" id="assignment" class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/delete?id=${assignment.id}" method="post">
                         <tr>
                             <td>${assignment.id}</td>
                             <td>${assignment.name}</td>

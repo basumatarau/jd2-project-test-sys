@@ -5,6 +5,7 @@ import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
+import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -31,11 +32,13 @@ public class MyAssignmentsController {
     public String myAssignments(
             @RequestParam(value = "page", required = false) Integer page,
             Model model,
-            Principal principal){
+            Principal principal) throws UserServiceException {
 
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         User assignee = userService.getUserByUserId(customUser.getId());
+
         long assignmentListSize = assignmentService.getNumberOfAssignmentsForAssignee(assignee);
 
         int topPageEntry = 0;

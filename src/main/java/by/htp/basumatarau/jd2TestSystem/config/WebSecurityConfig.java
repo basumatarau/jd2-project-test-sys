@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.SecureRandom;
+
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -17,10 +19,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Bean
-    public BCryptPasswordEncoder getPasswordEncoder(){
+    public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public SecureRandom secureRandom(){
+        return new SecureRandom();
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -38,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .authorizeRequests()
-                    .antMatchers("/", "/login**")
+                    .antMatchers("/", "/login**", "/sign-up**")
                     .permitAll()
                 .and()
                     .authorizeRequests()
@@ -61,8 +67,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         //salt source to be configured here...
 
-        provider.setPasswordEncoder(getPasswordEncoder());
+        provider.setPasswordEncoder(passwordEncoder());
         provider.setUserDetailsService(userDetailsService);
+
 
         auth.authenticationProvider(provider);
     }

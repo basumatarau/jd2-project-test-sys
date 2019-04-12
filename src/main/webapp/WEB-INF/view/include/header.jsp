@@ -9,45 +9,42 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-      <div class="collapse navbar-collapse" id="navbarNav">
-            <div>
-                <ul class="navbar-nav">
-                  <li class="nav-item active">
-                    <a class="nav-link" href="<spring:url value="/assignment-manager"/>">Assignment Manager</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="<spring:url value="/my-assignments"/>">My Assignments</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="<spring:url value="/subscribers" />">Subscribers</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="<spring:url value="/subscription" />">Subscription</a>
-                  </li>
-                </ul>
-            </div>
-
-        <div class="d-flex justify-content-between">
-            <div></div>
-            <div>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="<spring:url value="/assignment-manager"/>">Assignment Manager</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<spring:url value="/my-assignments"/>">My Assignments</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<spring:url value="/subscribers" />">Subscribers</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<spring:url value="/subscription" />">Subscription</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li>
                 <span class="navbar-text" class="pull-right">
-                <sec:authorize access="authenticated" var="authenticated" />
-                <c:choose>
-                    <c:when test="${authenticated}">
-                        welcome
-                        <sec:authentication property="name" />
-                        <a id="logout" href="#"> (logout)</a>
-                        <form id="logout-form" action="<c:url value="/logout"/>" method="POST">
-                            <sec:csrfInput/>
-                        </form>
-                    </c:when>
-                    <c:otherwise>
-                        <a href="<spring:url value="/login/"/>">Sign In</a>
-                    </c:otherwise>
-                </c:choose>
+                    <sec:authorize access="authenticated" var="authenticated" />
+                    <c:choose>
+                        <c:when test="${authenticated}">
+                            welcome
+                            <sec:authentication property="name" />
+                            <a id="logout" href="#"> (logout)</a>
+                            <form id="logout-form" action="<c:url value="/logout"/>" method="POST">
+                                <sec:csrfInput/>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <a href="<spring:url value="/login/"/>">Sign In</a>
+                            <a href="<spring:url value="/sign-up/"/>">Sign Up</a>
+                        </c:otherwise>
+                    </c:choose>
                 </span>
-            </div>
-        </div>
+            </li>
+        </ul>
       </div>
 </nav>
 <script src="<spring:url value="/resources/js/global.js"/>"></script>

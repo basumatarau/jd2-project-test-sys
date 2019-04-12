@@ -18,11 +18,11 @@
 		<form id="login-form" action="${pageContext.request.contextPath}/loginAction" method="POST">
 			<div class="form-group">
 				<label for="make">Username</label>
-				<input name="custom_username" class="form-control" />
+				<input name="custom_username" class="form-control" value="testemail@mail.com"/>
 			</div>
 			<div class="form-group">
 				<label for="model">Password</label>
-				<input type="password" name="custom_password" class="form-control" />
+				<input type="password" name="custom_password" class="form-control" value="testpassword" />
 			</div>
 			<sec:csrfInput />
 			<c:if test="${param.error != null}" >
