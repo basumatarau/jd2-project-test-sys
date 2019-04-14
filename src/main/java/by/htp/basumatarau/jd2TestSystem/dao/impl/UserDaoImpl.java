@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -57,7 +58,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> getUsers(int first, int entries) throws DaoException{
         Query<User> query = sessionFactory.getCurrentSession()
-                .createQuery("from User u ", User.class);
+                .createQuery("from User", User.class);
         List<User> result = null;
         try {
             result = query.setFirstResult(first)
@@ -82,5 +83,56 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void delete(User user) {
         sessionFactory.getCurrentSession().delete(user);
+    }
+
+    @Override
+    public Set<User> getFollowers(User user) throws DaoException {
+        Query<User> query = sessionFactory.getCurrentSession()
+                .createQuery("from User u " +
+                        "join fetch u.followers " +
+                        "where u.id=:id", User.class);
+        query.setParameter("id", user.getId());
+        Set<User> followers = null;
+        try {
+            List<User> resultList = query.getResultList();
+            if(!resultList.isEmpty()){
+                followers = resultList.get(0).getFollowers();
+            }
+        }catch (NoResultException e){
+            throw new UserCredentialsNotRegistered("fail", e);
+        }
+
+        return followers;
+    }
+
+    @Override
+    public Set<User> getFollowedUsers(User user) throws DaoException {
+        Query<User> query = sessionFactory.getCurrentSession()
+                .createQuery("from User u " +
+                        "join fetch u.followedUsers " +
+                        "where u.id=:id", User.class);
+        query.setParameter("id", user.getId());
+        Set<User> followedUsers = null;
+        try {
+            List<User> resultList = query.getResultList();
+            if(!resultList.isEmpty()){
+                followedUsers = resultList.get(0).getFollowedUsers();
+            }
+        }catch (NoResultException e){
+            throw new UserCredentialsNotRegistered("fail", e);
+        }
+        return followedUsers;
+    }
+
+    @Override
+    public long getNumberOfUsers() {
+        Query query = sessionFactory.getCurrentSession()
+                .createQuery("select count(*) from User ");
+        return (long) query.uniqueResult();
+    }
+
+    @Override
+    public void merge(User user) throws DaoException {
+        sessionFactory.getCurrentSession().merge(user);
     }
 }

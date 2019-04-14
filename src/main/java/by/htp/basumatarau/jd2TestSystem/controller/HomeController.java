@@ -58,7 +58,6 @@ public class HomeController {
         ModelAndView mav = new ModelAndView();
         try {
             if (userService.getUserByUserEmail(email) != null) {
-
                 mav.addObject("occupiedCredentials", "true");
                 mav.setViewName("sign-up");
                 return mav;
@@ -88,16 +87,6 @@ public class HomeController {
     @RequestMapping(value = "/sign-up", method = RequestMethod.GET)
     public String signUpPage(){
         return "sign-up";
-    }
-
-    @RequestMapping(value = "/subscribers")
-    public String subscribers(){
-        return "subscribers";
-    }
-
-    @RequestMapping(value = "/subscription")
-    public String subscription(){
-        return "subscription";
     }
 
     @RequestMapping(value = "/access-denied")

@@ -40,7 +40,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "users_iduser")},
             inverseJoinColumns = {@JoinColumn(name = "users_idsubscriber")}
     )
-    private Set<User> subscribers;
+    private Set<User> followers;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -48,7 +48,7 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "users_iduser")},
             joinColumns = {@JoinColumn(name = "users_idsubscriber")}
     )
-    private Set<User> assigners;
+    private Set<User> followedUsers;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -131,6 +131,22 @@ public class User {
         this.authoritySet = authoritySet;
     }
 
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
+    }
+
+    public Set<User> getFollowedUsers() {
+        return followedUsers;
+    }
+
+    public void setFollowedUsers(Set<User> followedUsers) {
+        this.followedUsers = followedUsers;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -140,13 +156,12 @@ public class User {
                 isEnabled == user.isEnabled &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
-                Objects.equals(nickName, user.nickName) &&
                 Objects.equals(email, user.email) &&
                 Objects.equals(passwordHash, user.passwordHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, nickName, email, passwordHash, isEnabled);
+        return Objects.hash(id, firstName, lastName, email, passwordHash, isEnabled);
     }
 }

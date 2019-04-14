@@ -6,7 +6,6 @@ import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
 import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
-import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -65,6 +64,11 @@ public class AssignmentManagerController {
         return assignmentManager(1, model, principal);
     }
 
+    @RequestMapping(value = "/new-assignment")
+    public String newAssignment(){
+        return "new-assignment";
+    }
+
     @RequestMapping(value = "/test-bank")
     public String testBankPage(){
         return "test-bank";
@@ -76,7 +80,7 @@ public class AssignmentManagerController {
     }
 
     @RequestMapping(value = "/test-constructor")
-    public String newAssignment(){
+    public String testConstructor(){
         return "test-constructor";
     }
 
