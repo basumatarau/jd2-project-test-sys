@@ -67,6 +67,38 @@ public class User {
     @OneToMany(mappedBy = "author")
     private Set<Question> authoredQuestions;
 
+    public Set<Test> getManagedTests() {
+        return managedTests;
+    }
+
+    public void setManagedTests(Set<Test> managedTests) {
+        this.managedTests = managedTests;
+    }
+
+    public Set<Assignment> getAssignmentSet() {
+        return assignmentSet;
+    }
+
+    public void setAssignmentSet(Set<Assignment> assignmentSet) {
+        this.assignmentSet = assignmentSet;
+    }
+
+    public Set<Test> getAuthoredTests() {
+        return authoredTests;
+    }
+
+    public void setAuthoredTests(Set<Test> authoredTests) {
+        this.authoredTests = authoredTests;
+    }
+
+    public Set<Question> getAuthoredQuestions() {
+        return authoredQuestions;
+    }
+
+    public void setAuthoredQuestions(Set<Question> authoredQuestions) {
+        this.authoredQuestions = authoredQuestions;
+    }
+
     public int getId() {
         return id;
     }

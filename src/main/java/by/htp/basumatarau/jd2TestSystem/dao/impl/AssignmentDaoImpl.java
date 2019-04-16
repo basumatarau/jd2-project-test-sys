@@ -1,6 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.dao.impl;
 
 import by.htp.basumatarau.jd2TestSystem.dao.AssignmentDao;
+import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import org.hibernate.SessionFactory;
@@ -9,12 +10,36 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AssignmentDaoImpl implements AssignmentDao {
 
     @Autowired
     private SessionFactory sessionFactory;
+
+    @Override
+    public TestAndQuestions getTestAndQuestionsForAssignment (Assignment assignment) {
+        Optional<TestAndQuestions> anyTestDetails = sessionFactory.getCurrentSession()
+                .createQuery("from Assignment a " +
+                        "join fetch a.masterTest " +
+                        "join fetch a.masterTest.questionSet " +
+                        "join fetch a.assignee " +
+                        "join fetch a.assigner " +
+                        "where a.id=:id ", Assignment.class)
+                .setParameter("id",assignment.getId())
+                .stream().map(a -> new TestAndQuestions(a)).findAny();
+
+        if(anyTestDetails.isPresent()){
+            return anyTestDetails.get();
+        }
+        return null;
+    }
+
+    @Override
+    public void persistNewAssignment(Assignment assignment) {
+        sessionFactory.getCurrentSession().persist(assignment);
+    }
 
     @Override
     public Assignment getAssignmentById(int id) {

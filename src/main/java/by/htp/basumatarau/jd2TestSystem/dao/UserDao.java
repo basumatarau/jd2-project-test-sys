@@ -1,7 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.dao;
 
 import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
-import by.htp.basumatarau.jd2TestSystem.dto.UserAndFollowedUsers;
+import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 
 import java.util.List;

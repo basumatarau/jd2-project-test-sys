@@ -20,13 +20,7 @@
 
         <ul>
             <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/test-constructor"/>test constructor</a></li>
-            </h3>
-            <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/test-bank"/>test bank</a></li>
-            </h3>
-            <h3>
-                <li><a href="${pageContext.request.contextPath}/assignment-manager/my-tests"/>my tests</a></li>
+                <li><a href="${pageContext.request.contextPath}/assignment-manager/new-assignment"/>new assignment</a></li>
             </h3>
         </ul>
     </div>

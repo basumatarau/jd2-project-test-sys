@@ -8,6 +8,7 @@ import java.util.Collection;
 public class CustomUser extends User {
     private String email;
     private int id;
+    private by.htp.basumatarau.jd2TestSystem.model.User currentUser;
 
     public CustomUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
@@ -15,6 +16,14 @@ public class CustomUser extends User {
 
     public CustomUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    }
+
+    public by.htp.basumatarau.jd2TestSystem.model.User getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(by.htp.basumatarau.jd2TestSystem.model.User currentUser) {
+        this.currentUser = currentUser;
     }
 
     public String getEmail() {

@@ -3,6 +3,7 @@ package by.htp.basumatarau.jd2TestSystem.dao.impl;
 import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
 import by.htp.basumatarau.jd2TestSystem.dao.exception.UserCredentialsNotRegistered;
+import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;

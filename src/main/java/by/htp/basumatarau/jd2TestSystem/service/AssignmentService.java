@@ -1,5 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.service;
 
+import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 
@@ -14,4 +15,9 @@ public interface AssignmentService {
     long getNumberOfAssignmentsForAssignee(User assignee);
     void deleteAssignment(Assignment assignment);
     Assignment getAssignmentById(int id);
+
+    void createNewAssignment(Assignment assignment);
+
+    Assignment getAssignmentForAssignee(Integer id, User assignee);
+    TestAndQuestions getAssignedTestAndQuestions(Assignment assignment);
 }

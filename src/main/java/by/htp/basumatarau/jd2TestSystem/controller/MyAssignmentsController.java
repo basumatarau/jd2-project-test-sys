@@ -71,8 +71,12 @@ public class MyAssignmentsController {
             Principal principal){
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = customUser.getCurrentUser();
 
-       //todo
+        Assignment assignment = assignmentService.getAssignmentForAssignee(id, currentUser);
+
+
+        //todo
         return "home";
     }
 }
