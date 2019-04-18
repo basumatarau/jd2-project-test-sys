@@ -29,11 +29,13 @@
                testElement.appendChild(testDescription);
                testElement.appendChild(document.createElement('br'));
                testElement.setAttribute("id", testDto.testId);
+               testElement.setAttribute("class", "test");
                for (var i = 0; i < testDto.questionDtos.length; i++) {
                     var question = testDto.questionDtos[i];
                     console.log(question);
                     var questionElement = document.createElement('div');
                     questionElement.setAttribute("id", question.id);
+                    questionElement.setAttribute("class", "question");
                     var questionBodyDiv = document.createElement('div');
                     var questionBody = document.createElement('p');
 
@@ -44,7 +46,7 @@
                     for (var j = 0; j < question.answerDtos.length; j++) {
                         var answer = question.answerDtos[j];
                         var answerElement = document.createElement('div');
-                        answerElement.setAttribute("class","row");
+                        answerElement.setAttribute("class","row answer");
                         answerElement.setAttribute("id", answer.id);
 
                         var answerBodyDiv = document.createElement('div');
@@ -87,7 +89,38 @@
 
     <script type="text/javascript">
         $( "button" ).click(function() {
-            alert( "todo..." );
+            var submission = {};
+            var submittedTest = document.getElementsByClassName('test')[0];
+            submission.id = submittedTest.id;
+            var submittedQuestions = [];
+            var questions = submittedTest.getElementsByClassName('question');
+            for(var i = 0; i < questions.length; i++){
+                var question = {};
+                question.id = questions[i].id;
+                submittedAnswers = [];
+                var answers = questions[i].getElementsByClassName('answer');
+                for(var j = 0; j < answers.length; j++){
+                    var answer = {};
+                    answer.id = answers[j].id;
+                    if(answers[j].getElementsByClassName('form-check-input')[0].checked){
+                        answer.answer = true;
+                    }else{
+                        answer.answer = false;
+                    }
+                    submittedAnswers.push(answer);
+                }
+                question.submittedAnswerDtos = submittedAnswers;
+                submittedQuestions.push(question);
+            }
+            submission.submittedQuestionDtos = submittedQuestions;
+            console.log(submission);
+
+             $.ajax({
+                    method: "POST",
+                    url: "http://localhost:8080${pageContext.request.contextPath}/api/assignment-get-test"
+                    data: submission
+                }).then(function(testDto) {
+             });
         });
     </script>
 </body>

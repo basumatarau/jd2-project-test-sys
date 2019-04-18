@@ -4,7 +4,7 @@ import java.util.Set;
 
 public class SubmittedTestDto {
     private Integer id;
-    private Set<SubmittedTestDto> submittedTestDtos;
+    private Set<SubmittedQuestionDto> submittedQuestionDtos;
 
     public Integer getId() {
         return id;
@@ -14,11 +14,11 @@ public class SubmittedTestDto {
         this.id = id;
     }
 
-    public Set<SubmittedTestDto> getSubmittedTestDtos() {
-        return submittedTestDtos;
+    public Set<SubmittedQuestionDto> getSubmittedQuestionDtos() {
+        return submittedQuestionDtos;
     }
 
-    public void setSubmittedTestDtos(Set<SubmittedTestDto> submittedTestDtos) {
-        this.submittedTestDtos = submittedTestDtos;
+    public void setSubmittedQuestionDtos(Set<SubmittedQuestionDto> submittedQuestionDtos) {
+        this.submittedQuestionDtos = submittedQuestionDtos;
     }
 }

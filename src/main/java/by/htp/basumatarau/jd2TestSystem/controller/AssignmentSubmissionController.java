@@ -40,6 +40,16 @@ public class AssignmentSubmissionController {
 
     @RequestMapping(value = "/assignment-get-test")
     @ResponseBody
+    public TestDto getAssignment( ){
+        /*CustomUser customUser
+                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = customUser.getCurrentUser();*/
+        //todo dododo...
+        return null;
+    }
+
+    @RequestMapping(value = "/assignment-get-test")
+    @ResponseBody
     public TestDto getAssignment(
             @RequestParam(value = "id") Integer id){
         /*CustomUser customUser
