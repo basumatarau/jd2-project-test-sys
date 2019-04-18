@@ -19,6 +19,14 @@ public class Category {
     @OneToMany(mappedBy = "category")
     private Set<Subcategory> subcategories;
 
+    public Set<Subcategory> getSubcategories() {
+        return subcategories;
+    }
+
+    public void setSubcategories(Set<Subcategory> subcategories) {
+        this.subcategories = subcategories;
+    }
+
     public int getId() {
         return id;
     }

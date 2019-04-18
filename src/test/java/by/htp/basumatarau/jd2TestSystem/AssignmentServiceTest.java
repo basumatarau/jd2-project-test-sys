@@ -1,13 +1,16 @@
 package by.htp.basumatarau.jd2TestSystem;
 
 import by.htp.basumatarau.jd2TestSystem.config.AppConfig;
-import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
+import by.htp.basumatarau.jd2TestSystem.model.Answer;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
-import by.htp.basumatarau.jd2TestSystem.model.User;
+import by.htp.basumatarau.jd2TestSystem.model.Question;
+import by.htp.basumatarau.jd2TestSystem.model.Tag;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
-import by.htp.basumatarau.jd2TestSystem.service.UserService;
 import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.util.Map;
+import java.util.Set;
 
 public class AssignmentServiceTest {
     private static AnnotationConfigApplicationContext context;
@@ -25,9 +28,13 @@ public class AssignmentServiceTest {
         AssignmentService assignmentService = context.getBean(AssignmentService.class);
 
         System.out.println(assignmentService);
-        Assignment assignment = assignmentService.getAssignmentById(1);
-        TestAndQuestions details = assignmentService.getAssignedTestAndQuestions(assignment);
-        System.out.println(details);
+        Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(1);
+
+        System.out.println(assignmentDetailed);
+        System.out.println(assignmentDetailed.getName());
+        for (Question question : assignmentDetailed.getMasterTest().getQuestionSet()) {
+            System.out.println(question.getBody());
+        }
     }
 
 }

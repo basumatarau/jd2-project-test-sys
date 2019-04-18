@@ -23,6 +23,22 @@ public class Subcategory {
     @JoinColumn(name = "categories_idcategory")
     private Category category;
 
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
     public int getId() {
         return id;
     }

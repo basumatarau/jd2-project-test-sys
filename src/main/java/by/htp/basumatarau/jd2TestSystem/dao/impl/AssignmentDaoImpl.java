@@ -1,7 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.dao.impl;
 
 import by.htp.basumatarau.jd2TestSystem.dao.AssignmentDao;
-import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import org.hibernate.SessionFactory;
@@ -19,19 +18,25 @@ public class AssignmentDaoImpl implements AssignmentDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public TestAndQuestions getTestAndQuestionsForAssignment (Assignment assignment) {
-        Optional<TestAndQuestions> anyTestDetails = sessionFactory.getCurrentSession()
+    public Assignment getAssignmentDetailed (Integer id) {
+        System.out.println("query");
+        Optional<Assignment> anyAssignment = sessionFactory.getCurrentSession()
                 .createQuery("from Assignment a " +
-                        "join fetch a.masterTest " +
-                        "join fetch a.masterTest.questionSet " +
-                        "join fetch a.assignee " +
                         "join fetch a.assigner " +
+                        "join fetch a.assignee " +
+                        "join fetch a.masterTest " +
+                        "join fetch a.masterTest.author " +
+                        "join fetch a.masterTest.questionSet question " +
+                        "join fetch question.author " +
+                        "join fetch question.answerSet " +
+                        "join fetch question.tagSet " +
+                        "join fetch question.subcategory subcat " +
+                        "join fetch subcat.category " +
                         "where a.id=:id ", Assignment.class)
-                .setParameter("id",assignment.getId())
-                .stream().map(a -> new TestAndQuestions(a)).findAny();
+                .setParameter("id", id).stream().findAny();
 
-        if(anyTestDetails.isPresent()){
-            return anyTestDetails.get();
+        if(anyAssignment.isPresent()){
+            return anyAssignment.get();
         }
         return null;
     }

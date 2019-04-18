@@ -1,7 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.model.Assignment;
-import by.htp.basumatarau.jd2TestSystem.model.User;
+import by.htp.basumatarau.jd2TestSystem.model.*;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -73,10 +73,9 @@ public class MyAssignmentsController {
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();
 
-        Assignment assignment = assignmentService.getAssignmentForAssignee(id, currentUser);
-
+        model.addAttribute("id", id);
 
         //todo
-        return "home";
+        return "test-submission-page";
     }
 }

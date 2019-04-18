@@ -1,11 +1,5 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
-import by.htp.basumatarau.jd2TestSystem.model.Test;
-import by.htp.basumatarau.jd2TestSystem.model.User;
-
-import java.util.Date;
-import java.util.List;
-
 public class NewAssignmentDto {
     private Integer[] assigneeIds;
     private Integer assignedTestId;

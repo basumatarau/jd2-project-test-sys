@@ -2,7 +2,6 @@ package by.htp.basumatarau.jd2TestSystem.service.impl;
 
 import by.htp.basumatarau.jd2TestSystem.dao.AssignmentDao;
 import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
-import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
@@ -23,25 +22,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Transactional
     @Override
-    public TestAndQuestions getAssignedTestAndQuestions(Assignment assignment) {
-        TestAndQuestions details = assignmentDao.getTestAndQuestionsForAssignment(assignment);
-        return details;
-    }
-
-    @Transactional
-    @Override
-    public Assignment getAssignmentForAssignee(Integer id, User assignee) {
-        List<Assignment> allAssignmentsForAssignee
-                = assignmentDao.getAllAssignmentsForAssignee(assignee);
-        Assignment result = null;
-        for (Assignment assignment : allAssignmentsForAssignee) {
-            if(assignment.getId()==id){
-                result = assignment;
-
-                break;
-            }
-        }
-        return result;
+    public Assignment getAssignmentDetailed(Integer id) {
+        return assignmentDao.getAssignmentDetailed(id);
     }
 
     @Transactional

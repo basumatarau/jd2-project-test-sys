@@ -1,6 +1,5 @@
 package by.htp.basumatarau.jd2TestSystem.dao;
 
-import by.htp.basumatarau.jd2TestSystem.dto.TestAndQuestions;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 
@@ -18,5 +17,5 @@ public interface AssignmentDao {
     void deleteAssignment(Assignment assignment);
     void persistNewAssignment(Assignment assignment);
 
-    TestAndQuestions getTestAndQuestionsForAssignment(Assignment assignment);
+    Assignment getAssignmentDetailed(Integer id);
 }

@@ -48,6 +48,54 @@ public class Question {
     @OneToMany(mappedBy = "masterQuestion")
     private Set<SubmittedQuestion> submittedQuestionSet;
 
+    public Set<Test> getTestSet() {
+        return testSet;
+    }
+
+    public void setTestSet(Set<Test> testSet) {
+        this.testSet = testSet;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public Set<Answer> getAnswerSet() {
+        return answerSet;
+    }
+
+    public void setAnswerSet(Set<Answer> answerSet) {
+        this.answerSet = answerSet;
+    }
+
+    public Subcategory getSubcategory() {
+        return subcategory;
+    }
+
+    public void setSubcategory(Subcategory subcategory) {
+        this.subcategory = subcategory;
+    }
+
+    public Set<Tag> getTagSet() {
+        return tagSet;
+    }
+
+    public void setTagSet(Set<Tag> tagSet) {
+        this.tagSet = tagSet;
+    }
+
+    public Set<SubmittedQuestion> getSubmittedQuestionSet() {
+        return submittedQuestionSet;
+    }
+
+    public void setSubmittedQuestionSet(Set<SubmittedQuestion> submittedQuestionSet) {
+        this.submittedQuestionSet = submittedQuestionSet;
+    }
+
     public int getId() {
         return id;
     }
