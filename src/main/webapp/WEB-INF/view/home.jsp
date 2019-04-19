@@ -11,12 +11,13 @@
 <body>
 	<jsp:include page="include/header.jsp"/>
 	<div class="container">
-		<div class="row">
+		<div>
 			<h1>Welcome to the test system!</h1>
 			<br>
 			<h3>...go compile a test and assign it to anybody</h3>
 			<br>
 			<p>...some description will be here</p>
+
 		</div>
 	</div>
 </body>

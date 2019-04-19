@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "answeredQuestions_has_answers")
+@Table(name = "submittedQuestions_has_answers")
 public class SubmittedAnswer {
 
     @Id
@@ -23,6 +23,14 @@ public class SubmittedAnswer {
     @ManyToOne
     @JoinColumn(name = "answers_idanswer")
     private Answer masterAnswer;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public boolean isGivenAnswer() {
         return givenAnswer;

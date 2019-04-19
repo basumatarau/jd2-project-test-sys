@@ -1,18 +1,14 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.dao.TestDao;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
-import by.htp.basumatarau.jd2TestSystem.model.Test;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
-import by.htp.basumatarau.jd2TestSystem.service.TestService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
 import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,13 +54,24 @@ public class AssignmentManagerController {
         return "assignment-manager";
     }
 
-    @RequestMapping(value = "/deleteAssignment")
+    @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteAssignment(
             @RequestParam("id") Integer id,
             Model model,
             Principal principal) throws ServiceException{
-
         assignmentService.deleteAssignment(assignmentService.getAssignmentById(id));
         return assignmentManager(1, model, principal);
+    }
+
+    @RequestMapping(value = "/showResult", method = RequestMethod.GET)
+    public String showResult(
+            @RequestParam("id") Integer id,
+            Model model,
+            Principal principal) throws ServiceException{
+
+        Assignment assignmentDetailed = assignmentService.getAssignmentAndSubmittedQuestions(id);
+        model.addAttribute("submittedAssignment", assignmentDetailed);
+
+        return "assignment-results";
     }
 }

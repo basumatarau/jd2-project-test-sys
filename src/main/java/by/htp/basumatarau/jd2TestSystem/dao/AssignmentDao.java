@@ -1,9 +1,11 @@
 package by.htp.basumatarau.jd2TestSystem.dao;
 
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
+import by.htp.basumatarau.jd2TestSystem.model.SubmittedQuestion;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AssignmentDao {
     List<Assignment> getAssignmentsForAssignee(User assignee, int idAfter, int entries);
@@ -18,4 +20,6 @@ public interface AssignmentDao {
     void persistNewAssignment(Assignment assignment);
 
     Assignment getAssignmentDetailed(Integer id);
+    void merge(Assignment assignment);
+    Assignment getAssignmentAndSubmittedQuestions(Integer id);
 }

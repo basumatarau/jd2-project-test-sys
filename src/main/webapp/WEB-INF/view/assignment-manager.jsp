@@ -41,7 +41,6 @@
             </thead>
             <tbody>
                 <c:forEach items="${assignmentList}" var="assignment">
-                    <form name="assignment" id="assignment" class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/delete?id=${assignment.id}" method="post">
                         <tr>
                             <td>${assignment.id}</td>
                             <td>${assignment.name}</td>
@@ -49,22 +48,34 @@
                             <td>${assignment.deadline}</td>
                             <td>${assignment.details}</td>
                             <td>
-                                 <c:choose>
-                                   <c:when test="${assignment.isSubmitted()}">
-                                     <span class="badge badge-success">yes</span>
-                                   </c:when>
-                                   <c:when test="${!assignment.isSubmitted()}">
-                                     <span class="badge badge-warning">no</span>
-                                   </c:when>
-                                 </c:choose>
+                                <c:choose>
+                                    <c:when test="${assignment.isSubmitted()}">
+                                        <span class="badge badge-success">yes</span>
+                                    </c:when>
+                                    <c:when test="${!assignment.isSubmitted()}">
+                                        <span class="badge badge-warning">no</span>
+                                    </c:when>
+                                </c:choose>
                             </td>
                             <td>
-                                <button id="delete" value="delete" name="delete" class="btn btn-danger">
-                                    Delete
-                                </button>
+                                <c:choose>
+                                    <c:when test="${assignment.isSubmitted()}">
+                                        <form class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/showResult" method="get">
+                                            <button id="show-result" value="${assignment.id}" name="id" class="btn btn-primary">
+                                                Show results
+                                            </button>
+                                        </form>
+                                    </c:when>
+                                    <c:when test="${!assignment.isSubmitted()}">
+                                        <form class="form-horizontal" action="${pageContext.request.contextPath}/assignment-manager/delete?id=${assignment.id}" method="post">
+                                            <button id="delete" value="delete" name="delete" class="btn btn-danger">
+                                                Delete assignment
+                                            </button>
+                                        </form>
+                                    </c:when>
+                                </c:choose>
                             </td>
                         </tr>
-                    </form>
                 </c:forEach>
             </tbody>
         </table>

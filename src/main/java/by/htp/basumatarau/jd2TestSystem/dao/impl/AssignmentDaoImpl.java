@@ -18,8 +18,30 @@ public class AssignmentDaoImpl implements AssignmentDao {
     private SessionFactory sessionFactory;
 
     @Override
+    public void merge(Assignment assignment) {
+        sessionFactory.getCurrentSession().merge(assignment);
+    }
+
+    @Override
+    public Assignment getAssignmentAndSubmittedQuestions(Integer id) {
+        Optional<Assignment> anyAssignment = sessionFactory.getCurrentSession()
+                .createQuery("from Assignment a " +
+                        "join fetch a.assigner " +
+                        "join fetch a.assignee " +
+                        "join fetch a.submittedQuestionSet subQuestion " +
+                        "join fetch subQuestion.submittedAnswerSet subAnswer " +
+                        "join fetch subAnswer.masterAnswer " +
+                        "where a.id=:id ", Assignment.class)
+                .setParameter("id", id).stream().findAny();
+
+        if(anyAssignment.isPresent()){
+            return anyAssignment.get();
+        }
+        return null;
+    }
+
+    @Override
     public Assignment getAssignmentDetailed (Integer id) {
-        System.out.println("query");
         Optional<Assignment> anyAssignment = sessionFactory.getCurrentSession()
                 .createQuery("from Assignment a " +
                         "join fetch a.assigner " +

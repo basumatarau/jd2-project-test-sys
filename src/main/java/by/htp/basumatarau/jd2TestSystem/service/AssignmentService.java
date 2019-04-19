@@ -18,4 +18,6 @@ public interface AssignmentService {
     void createNewAssignment(Assignment assignment);
 
     Assignment getAssignmentDetailed(Integer id);
+    void mergeAssignment(Assignment assignment);
+    Assignment getAssignmentAndSubmittedQuestions(Integer id);
 }

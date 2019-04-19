@@ -27,7 +27,7 @@
                     <th scope="col">Assigner</th>
                     <th scope="col">Due date</th>
                     <th scope="col">Details</th>
-                    <th scope="col" colspan="2">Submitted</th>
+                    <th scope="col">Submitted</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,17 +42,14 @@
                             <td>
                                  <c:choose>
                                    <c:when test="${assignment.isSubmitted()}">
-                                     <span class="badge badge-success">yes</span>
+                                     <span class="badge badge-success">submitted</span>
                                    </c:when>
                                    <c:when test="${!assignment.isSubmitted()}">
-                                     <span class="badge badge-warning">no</span>
+                                     <button class="btn btn-warning">
+                                        pending(start)
+                                     </button>
                                    </c:when>
                                  </c:choose>
-                            </td>
-                            <td>
-                                <button id="start" value="start" name="start" class="btn btn-primary">
-                                    Start
-                                </button>
                             </td>
                         </tr>
                     </form>

@@ -22,6 +22,18 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Transactional
     @Override
+    public Assignment getAssignmentAndSubmittedQuestions(Integer id) {
+        return assignmentDao.getAssignmentAndSubmittedQuestions(id);
+    }
+
+    @Transactional
+    @Override
+    public void mergeAssignment(Assignment assignment) {
+        assignmentDao.merge(assignment);
+    }
+
+    @Transactional
+    @Override
     public Assignment getAssignmentDetailed(Integer id) {
         return assignmentDao.getAssignmentDetailed(id);
     }

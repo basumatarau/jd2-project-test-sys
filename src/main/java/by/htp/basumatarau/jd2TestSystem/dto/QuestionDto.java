@@ -1,11 +1,11 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
-import java.util.Set;
+import java.util.List;
 
 public class QuestionDto {
     private Integer id;
     private String body;
-    private Set<AnswerDto> answerDtos;
+    private List<AnswerDto> answerDtos;
 
     public Integer getId() {
         return id;
@@ -23,11 +23,11 @@ public class QuestionDto {
         this.body = body;
     }
 
-    public Set<AnswerDto> getAnswerDtos() {
+    public List<AnswerDto> getAnswerDtos() {
         return answerDtos;
     }
 
-    public void setAnswerDtos(Set<AnswerDto> answerDtos) {
+    public void setAnswerDtos(List<AnswerDto> answerDtos) {
         this.answerDtos = answerDtos;
     }
 }

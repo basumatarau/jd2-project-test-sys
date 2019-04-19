@@ -15,7 +15,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $.ajax({
-                url: "http://localhost:8080${pageContext.request.contextPath}/api/assignment-get-test?id=${id}"
+                method: "GET",
+                url: "${pageContext.request.contextPath}/api/assignment-test?id=${id}"
             }).then(function(testDto) {
                var testElement = document.createElement('div');
 
@@ -29,7 +30,7 @@
                testElement.appendChild(testDescription);
                testElement.appendChild(document.createElement('br'));
                testElement.setAttribute("id", testDto.testId);
-               testElement.setAttribute("class", "test");
+               testElement.setAttribute("class", "test-insertion");
                for (var i = 0; i < testDto.questionDtos.length; i++) {
                     var question = testDto.questionDtos[i];
                     console.log(question);
@@ -79,10 +80,10 @@
     <jsp:include page="include/header.jsp" />
 
     <div class="container">
-        <h1>Answer the following questions</h1>
+        <h1 id="instructions-header">Answer the following questions</h1>
         <div id="test-place-holder" class="test">
         </div>
-        <div>
+        <div id="submit-test-div">
             <button type="button" class="btn btn-success" id="submit-test">submit test</button>
         </div>
     </div>
@@ -90,7 +91,7 @@
     <script type="text/javascript">
         $( "button" ).click(function() {
             var submission = {};
-            var submittedTest = document.getElementsByClassName('test')[0];
+            var submittedTest = document.getElementsByClassName('test-insertion')[0];
             submission.id = submittedTest.id;
             var submittedQuestions = [];
             var questions = submittedTest.getElementsByClassName('question');
@@ -115,12 +116,31 @@
             submission.submittedQuestionDtos = submittedQuestions;
             console.log(submission);
 
-             $.ajax({
-                    method: "POST",
-                    url: "http://localhost:8080${pageContext.request.contextPath}/api/assignment-get-test"
-                    data: submission
-                }).then(function(testDto) {
-             });
+            $.ajax({
+                method: 'POST',
+                contentType: 'application/json',
+                url: '${pageContext.request.contextPath}/api/assignment-test',
+                data: JSON.stringify(submission)
+            }).done(function(response) {
+                console.log(response);
+                if(response == 'OK'){
+                    var template = document.getElementById("test-place-holder");
+                    while(template.hasChildNodes()){
+                        template.removeChild(template.firstChild);
+                    }
+                    var success = document.createElement('h2');
+                    success.innerHTML = "test has been submitted successfully!"
+                    template.appendChild(success);
+                    var getBack = document.createElement('a');
+                    getBack.setAttribute('href', "${pageContext.request.contextPath}");
+                    getBack.innerHTML = "back to home page";
+                    template.appendChild(getBack);
+                    var submitDiv = document.getElementById("submit-test-div");
+                    submitDiv.parentElement.removeChild(submitDiv);
+                    var instructions = document.getElementById("instructions-header");
+                    instructions.parentElement.removeChild(instructions);
+                }
+            });
         });
     </script>
 </body>

@@ -1,13 +1,13 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
-import java.util.Set;
+import java.util.List;
 
 public class TestDto {
     private Integer testId;
     private String testName;
     private String testDescription;
 
-    private Set<QuestionDto> questionDtos;
+    private List<QuestionDto> questionDtos;
 
     public Integer getTestId() {
         return testId;
@@ -33,11 +33,11 @@ public class TestDto {
         this.testDescription = testDescription;
     }
 
-    public Set<QuestionDto> getQuestionDtos() {
+    public List<QuestionDto> getQuestionDtos() {
         return questionDtos;
     }
 
-    public void setQuestionDtos(Set<QuestionDto> questionDtos) {
+    public void setQuestionDtos(List<QuestionDto> questionDtos) {
         this.questionDtos = questionDtos;
     }
 }
