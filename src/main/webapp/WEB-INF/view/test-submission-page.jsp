@@ -12,98 +12,143 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>test system</title>
     <jsp:include page="include/default-js-css-res.jsp"/>
+
+    <style>
+        div.question-form {
+            margin: 10px;
+            padding: 10px;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #666699;
+            border-radius: 10px;
+        }
+
+        div.answer-form{
+            margin: 4px;
+            padding: 4px;
+        }
+
+        div.test-question{
+            margin: 10px;
+            padding: 15px;
+        }
+
+        p.answer-body{
+            margin: 5px;
+            padding: 5px;
+        }
+
+        div.answer-checkbox {
+            margin: 5px;
+            padding: 5px;
+        }
+
+        div.submit-test-div{
+            margin: 15px;
+            padding: 15px;
+        }
+
+        #assignment-details{
+            margin: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <jsp:include page="include/header.jsp" />
+
+    <div class="container">
+        <div id="assignment-details" >
+            <div>
+                <p id="test-name"></p>
+            </div>
+            <div>
+                <p id="test-description"></p>
+            </div>
+        </div>
+
+        <div id="test-place-holder">
+            <div>
+            </div>
+        </div>
+
+        <div id="answer-form-template" hidden>
+            <div>
+                <div class="answer-checkbox">
+                    <input type="checkbox" class="should-be-checked" value="0">
+                </div>
+                <div>
+                    <p class="answer-body"></p>
+                </div>
+            </div>
+        </div>
+        <div id="question-form-template" hidden>
+            <div>
+                <div class="test-question">
+                    <p class="test-question-body"></p>
+                </div>
+                <div class="test-answers">
+
+                </div>
+            </div>
+        </div>
+
+        <div id="submit-test-div">
+            <button type="button" class="btn btn-success btn-lg btn-block" id="submit-test">submit test</button>
+        </div>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $.ajax({
                 method: "GET",
                 url: "${pageContext.request.contextPath}/api/assignment-test?id=${id}"
             }).then(function(testDto) {
-               var testElement = document.createElement('div');
-
-               var testHeader = document.createElement('h2');
-               testHeader.innerHTML = testDto.testName;
-               testElement.appendChild(testHeader);
-               testElement.appendChild(document.createElement('br'));
-
-               var testDescription = document.createElement('p');
-               testDescription.innerHTML = testDto.testDescription;
-               testElement.appendChild(testDescription);
-               testElement.appendChild(document.createElement('br'));
-               testElement.setAttribute("id", testDto.testId);
-               testElement.setAttribute("class", "test-insertion");
-               for (var i = 0; i < testDto.questionDtos.length; i++) {
+            
+                document.getElementById("test-name").innerHTML = testDto.testName;
+                document.getElementById("test-description").innerHTML = testDto.testDescription;
+                var placeHolder = document.getElementById("test-place-holder").firstElementChild;
+                placeHolder.setAttribute("class", "test-container");
+                placeHolder.setAttribute("id", testDto.testId);
+                for (var i = 0; i < testDto.questionDtos.length; i++) {
                     var question = testDto.questionDtos[i];
-                    console.log(question);
-                    var questionElement = document.createElement('div');
-                    questionElement.setAttribute("id", question.id);
-                    questionElement.setAttribute("class", "question");
-                    var questionBodyDiv = document.createElement('div');
-                    var questionBody = document.createElement('p');
-
-                    questionBody.innerHTML = question.body;
-                    questionBodyDiv.appendChild(questionBody);
-                    questionElement.appendChild(questionBodyDiv);
-
+                    var questionDivTemplate = document.getElementById("question-form-template").firstElementChild;
+                    var questionDiv = questionDivTemplate.cloneNode(true);
+                    questionDiv.getElementsByClassName("test-question-body")[0].innerHTML = question.body;
+                    questionDiv.setAttribute("class", "question-form");
+                    questionDiv.setAttribute("id", question.id);
                     for (var j = 0; j < question.answerDtos.length; j++) {
                         var answer = question.answerDtos[j];
-                        var answerElement = document.createElement('div');
-                        answerElement.setAttribute("class","row answer");
-                        answerElement.setAttribute("id", answer.id);
-
-                        var answerBodyDiv = document.createElement('div');
-                        var answerBody = document.createElement('p');
-                        answerBody.innerHTML = answer.body;
-                        answerBodyDiv.appendChild(answerBody);
-                        answerElement.appendChild(answerBodyDiv);
-
-                        var answerOptDiv = document.createElement('div');
-                        answerOptDiv.setAttribute("class", "form-check");
-                        var answerOpt = document.createElement('input');
-                        answerOpt.setAttribute("type","checkbox");
-                        answerOpt.setAttribute("class","form-check-input");
-
-                        answerOptDiv.appendChild(answerOpt);
-                        answerElement.appendChild(answerOptDiv);
-                        questionElement.appendChild(answerElement);
+                        var answerDivTemplate = document.getElementById("answer-form-template").firstElementChild;
+                        var answerDiv = answerDivTemplate.cloneNode(true);
+                        answerDiv.getElementsByClassName("answer-body")[0].innerHTML = answer.body;
+                        answerDiv.setAttribute("class", "answer-form row");
+                        answerDiv.setAttribute("id", answer.id);
+                        questionDiv.getElementsByClassName("test-answers")[0].appendChild(answerDiv);
                     }
-                    testElement.appendChild(questionElement);
-               }
-               var submitButtonElement = document.createElement('div');
-
-               testElement.appendChild(submitButtonElement);
-               document.getElementById("test-place-holder").appendChild(testElement);
+                    placeHolder.appendChild(questionDiv);
+                }
+               
             });
         });
     </script>
-</head>
-<body>
-    <jsp:include page="include/header.jsp" />
-
-    <div class="container">
-        <h1 id="instructions-header">Answer the following questions</h1>
-        <div id="test-place-holder" class="test">
-        </div>
-        <div id="submit-test-div">
-            <button type="button" class="btn btn-success" id="submit-test">submit test</button>
-        </div>
-    </div>
 
     <script type="text/javascript">
         $( "button" ).click(function() {
             var submission = {};
-            var submittedTest = document.getElementsByClassName('test-insertion')[0];
+            var submittedTest = document.getElementsByClassName("test-container")[0];
             submission.id = submittedTest.id;
             var submittedQuestions = [];
-            var questions = submittedTest.getElementsByClassName('question');
+            var questions = submittedTest.getElementsByClassName("question-form");
             for(var i = 0; i < questions.length; i++){
                 var question = {};
                 question.id = questions[i].id;
                 submittedAnswers = [];
-                var answers = questions[i].getElementsByClassName('answer');
+                var answers = questions[i].getElementsByClassName("answer-form");
                 for(var j = 0; j < answers.length; j++){
                     var answer = {};
                     answer.id = answers[j].id;
-                    if(answers[j].getElementsByClassName('form-check-input')[0].checked){
+                    if(answers[j].getElementsByClassName("should-be-checked")[0].checked){
                         answer.answer = true;
                     }else{
                         answer.answer = false;
@@ -124,7 +169,11 @@
             }).done(function(response) {
                 console.log(response);
                 if(response == 'OK'){
-                    var template = document.getElementById("test-place-holder");
+                    document.getElementById("test-place-holder").remove();
+                    document.getElementById("answer-form-template").remove();
+                    document.getElementById("question-form-template").remove();
+
+                    var template = document.getElementById("assignment-details");
                     while(template.hasChildNodes()){
                         template.removeChild(template.firstChild);
                     }
@@ -137,8 +186,6 @@
                     template.appendChild(getBack);
                     var submitDiv = document.getElementById("submit-test-div");
                     submitDiv.parentElement.removeChild(submitDiv);
-                    var instructions = document.getElementById("instructions-header");
-                    instructions.parentElement.removeChild(instructions);
                 }
             });
         });
