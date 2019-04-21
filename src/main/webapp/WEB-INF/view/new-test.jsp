@@ -121,7 +121,7 @@
             </div>
 
             <div id="template-test-question" hidden>
-                <div class="test-question">
+                <div>
                     <div class="test-question-row row">
                         <label class="col-sm-2" for="test-question">Enter the question body</label>
                         <div class="col-sm-10">
@@ -176,6 +176,7 @@
         $( "#add-question" ).click(function() {
             var templateQuestionDiv = document.getElementById("template-test-question").firstElementChild;
             var templateQuestionDivClone = templateQuestionDiv.cloneNode(true);
+            templateQuestionDivClone.setAttribute("class", "test-question");
             var testContentDiv = document.getElementById("test-content");
             testContentDiv.appendChild(templateQuestionDivClone);
         });
@@ -203,9 +204,10 @@
             }
             var newTest = {};
             newTest.questions = questions;
-            newTest.name = document.getElementById("test-name").value;
-            newTest.description = document.getElementById("test-description").value;
-            newTest.duration = document.getElementById("test-duration").value;
+            newTest.name = document.getElementById("test-name").value || "";
+
+            newTest.description = document.getElementById("test-description").value || "";
+            newTest.duration = document.getElementById("test-duration").value || 0;
             newTest.isPublic = document.getElementById("is-public").checked;
 
             $.ajax({
