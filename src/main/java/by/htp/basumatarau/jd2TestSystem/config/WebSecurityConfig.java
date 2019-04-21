@@ -49,9 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/assignment-manager**",
+                            "/assignment-manager/delete**",
+                            "/assignment-manager/showResult**",
                             "/subscribers**",
                             "/subscription**",
-                            "/my-assignments**")
+                            "/my-resources**",
+                            "/my-resources/newTest**",
+                            "/my-assignments**",
+                            "/my-assignments/start**")
                     .hasAnyRole("ADMIN", "USER", "GUEST")
                 .and()
                     .exceptionHandling()

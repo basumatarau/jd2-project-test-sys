@@ -69,7 +69,7 @@ public class TestDaoImpl implements TestDao {
 
     @Override
     public void createNewTest(Test test) {
-        sessionFactory.getCurrentSession().persist(test);
+        sessionFactory.getCurrentSession().save(test);
     }
 
     @Override

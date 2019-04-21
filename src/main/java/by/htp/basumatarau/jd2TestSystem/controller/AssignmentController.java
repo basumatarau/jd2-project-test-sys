@@ -2,18 +2,16 @@ package by.htp.basumatarau.jd2TestSystem.controller;
 
 import by.htp.basumatarau.jd2TestSystem.dto.*;
 import by.htp.basumatarau.jd2TestSystem.model.*;
-import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
-import by.htp.basumatarau.jd2TestSystem.service.SubmittedAnswerService;
-import by.htp.basumatarau.jd2TestSystem.service.SubmittedQuestionService;
-import by.htp.basumatarau.jd2TestSystem.service.UserService;
+import by.htp.basumatarau.jd2TestSystem.service.*;
+import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,6 +31,15 @@ public class AssignmentController {
 
     @Autowired
     private SubmittedQuestionService submittedQuestionService;
+
+    @Autowired
+    private TestService testService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private AnswerService answerService;
 
     @RequestMapping(value = "/assignment-test", method = RequestMethod.POST)
     public ResponseEntity getAssignment(@RequestBody SubmittedTestDto dto){
@@ -105,5 +112,43 @@ public class AssignmentController {
         }
 
         return testDto;
+    }
+
+    @RequestMapping(value = "/new-assignment-test", method = RequestMethod.POST)
+    public ResponseEntity createSimpleTestAndQuestions(@RequestBody NewTestDto dto)
+            throws ServiceException {
+        /*CustomUser customUser
+                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = customUser.getCurrentUser();*/
+        User currentUser = userService.getUserByUserId(1);
+        //todo auth
+
+        Test test = new Test();
+        test.setAuthor(currentUser);
+        test.setDescription(dto.getDescription());
+        test.setName(dto.getName());
+        test.setDuration(dto.getDuration());
+        test.setPublic(dto.isPublic());
+        HashSet<Question> questions = new HashSet<>();
+        test.setQuestionSet(questions);
+        for (NewQuestionDto newQuestionDto : dto.getQuestions()) {
+            Question newQuestion = new Question();
+            newQuestion.setAuthor(currentUser);
+            newQuestion.setBody(newQuestionDto.getQuestionBody());
+            questions.add(newQuestion);
+            HashSet<Answer> answers = new HashSet<>();
+            newQuestion.setAnswerSet(answers);
+            questionService.createNewQuestion(newQuestion);
+            for (NewAnswerDto newAnswerDto : newQuestionDto.getAnswers()) {
+                Answer answer = new Answer();
+                answer.setBody(newAnswerDto.getAnswerBody());
+                answer.setFalse(newAnswerDto.isChecked());
+                answers.add(answer);
+                answer.setQuestion(newQuestion);
+                answerService.createNewAnswer(answer);
+            }
+        }
+        testService.createNewTest(test);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

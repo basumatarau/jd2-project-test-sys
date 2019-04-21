@@ -26,6 +26,14 @@ public class Answer {
     @OneToMany(mappedBy = "masterAnswer")
     private Set<SubmittedAnswer> submittedAnswerSet;
 
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
+    }
+
     public int getId() {
         return id;
     }

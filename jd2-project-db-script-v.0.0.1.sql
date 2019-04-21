@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`questions` (
   `idquestion` INT NOT NULL AUTO_INCREMENT,
   `body` VARCHAR(1000) NOT NULL,
   `isOfMultipleChoice` TINYINT(1) NOT NULL,
-  `subcategories_idsubcategory` INT NOT NULL,
+  `subcategories_idsubcategory` INT NULL,
   `users_iduser` INT NOT NULL,
   PRIMARY KEY (`idquestion`),
   INDEX `fk_questions_subcategories1_idx` (`subcategories_idsubcategory` ASC),

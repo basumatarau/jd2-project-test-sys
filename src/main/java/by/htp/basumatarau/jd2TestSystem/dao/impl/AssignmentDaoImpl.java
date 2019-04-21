@@ -51,9 +51,6 @@ public class AssignmentDaoImpl implements AssignmentDao {
                         "join fetch a.masterTest.questionSet question " +
                         "join fetch question.author " +
                         "join fetch question.answerSet " +
-                        "join fetch question.tagSet " +
-                        "join fetch question.subcategory subcat " +
-                        "join fetch subcat.category " +
                         "where a.id=:id ", Assignment.class)
                 .setParameter("id", id).stream().findAny();
 

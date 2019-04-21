@@ -23,7 +23,7 @@ public class AssignmentServiceTest {
         AssignmentService assignmentService = context.getBean(AssignmentService.class);
 
         System.out.println(assignmentService);
-        Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(6);
+        Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(5);
 
         System.out.println(assignmentDetailed);
         System.out.println(assignmentDetailed.getName());

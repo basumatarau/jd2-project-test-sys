@@ -101,4 +101,5 @@ public class NewAssignmentController {
         //todo test assignment view
         return "redirect:/assignment-manager";
     }
+
 }

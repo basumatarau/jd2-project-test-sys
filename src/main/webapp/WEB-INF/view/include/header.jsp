@@ -23,6 +23,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="<spring:url value="/subscription" />">Subscription</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<spring:url value="/my-resources" />">My Resources</a>
+            </li>
         </ul>
         <ul class="navbar-nav">
             <li>

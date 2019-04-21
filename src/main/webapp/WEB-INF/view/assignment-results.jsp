@@ -34,43 +34,46 @@
                     <div>
                         assigner: ${submittedAssignment.assigner.getFirstName()} ${submittedAssignment.assigner.getLastName()}
                     </div>
-                    <div>
+                    <div class="jumbotron">
                         <c:forEach items="${submittedAssignment.submittedQuestionSet}" var="submittetdQuestion">
                             <div>
-                                ${submittetdQuestion.masterQuestion.body}
-                            </div>
-                            <div>
-                                <c:forEach items="${submittetdQuestion.submittedAnswerSet}" var="submittedAnswer">
-                                    <c:choose>
-                                        <c:when test="${submittedAnswer.masterAnswer.isFalse() && submittedAnswer.isGivenAnswer()}">
-                                            <div style="background-color:#ff8080" class="row">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <div style="background-color:#80ff9f" class="row">
-                                        </c:otherwise>
-                                    </c:choose>
-                                        <div>
-                                            <c:choose>
-                                                <c:when test="${submittedAnswer.masterAnswer.isFalse()}">
-                                                    should NOT be chosen:
-                                                </c:when>
-                                                <c:when test="${!submittedAnswer.masterAnswer.isFalse()}">
-                                                    should be chosen:
-                                                </c:when>
-                                            </c:choose>
+                                <div>
+                                    ${submittetdQuestion.masterQuestion.body}
+                                </div>
+                                <div>
+                                    <c:forEach items="${submittetdQuestion.submittedAnswerSet}" var="submittedAnswer">
+                                        <c:choose>
+                                            <c:when test="${submittedAnswer.masterAnswer.isFalse() == submittedAnswer.isGivenAnswer()}">
+                                                <div style="background-color:#ff8080" class="row">
+                                                <div>
+                                                    <c:choose>
+                                                        <c:when test="${submittedAnswer.masterAnswer.isFalse()}">
+                                                            <span class="badge badge-pill badge-info">should NOT be chosen</span>
+                                                        </c:when>
+                                                        <c:when test="${!submittedAnswer.masterAnswer.isFalse()}">
+                                                            <span class="badge badge-pill badge-info">should be chosen</span>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <div style="background-color:#80ff9f" class="row">
+                                                <div>
+                                                    <span class="badge badge-pill badge-info">ok</span>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+                                            <div>
+                                                ${submittedAnswer.masterAnswer.body}
+                                            </div>
                                         </div>
-                                        <div>
-                                            ${submittedAnswer.masterAnswer.body}
-                                        </div>
-                                    </div>
-                                </c:forEach>
+                                    </c:forEach>
+                                </div>
                             </div>
                         </c:forEach>
                     </div>
                 </div>
-
         </div>
     </div>
-
 </body>
 </html>
