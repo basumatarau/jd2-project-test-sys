@@ -263,7 +263,6 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_subscribers` (
   `users_iduser` INT NOT NULL,
   `users_idsubscriber` INT NOT NULL,
-  `groupName` VARCHAR(80) NULL,
   PRIMARY KEY (`users_iduser`, `users_idsubscriber`),
   INDEX `fk_users_has_users_users2_idx` (`users_idsubscriber` ASC),
   INDEX `fk_users_has_users_users1_idx` (`users_iduser` ASC),
@@ -323,6 +322,40 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`submittedQuestions_has_answers` (
   CONSTRAINT `fk_answeredQuestions_has_answers_submittedQuestions1`
     FOREIGN KEY (`submittedQuestions_idsubmittedQuestion`)
     REFERENCES `test-system-db`.`submittedQuestions` (`idsubmittedQuestion`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `boraji`.`groups`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `boraji`.`groups` (
+  `idgroup` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`idgroup`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `test-system-db`.`subscribers_has_groups`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `test-system-db`.`subscribers_has_groups` (
+  `users_has_subscribers_iduser` INT NOT NULL,
+  `users_has_subscribers_idsubscriber` INT NOT NULL,
+  `groups_idgroup` INT NOT NULL,
+  PRIMARY KEY (`users_has_subscribers_iduser`, `users_has_subscribers_idsubscriber`, `groups_idgroup`),
+  INDEX `fk_users_has_subscribers_has_groups_groups1_idx` (`groups_idgroup` ASC),
+  INDEX `fk_users_has_subscribers_has_groups_users_has_subscribers1_idx` (`users_has_subscribers_iduser` ASC, `users_has_subscribers_idsubscriber` ASC),
+  CONSTRAINT `fk_users_has_subscribers_has_groups_users_has_subscribers1`
+    FOREIGN KEY (`users_has_subscribers_iduser` , `users_has_subscribers_idsubscriber`)
+    REFERENCES `test-system-db`.`users_has_subscribers` (`users_iduser` , `users_idsubscriber`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_subscribers_has_groups_groups1`
+    FOREIGN KEY (`groups_idgroup`)
+    REFERENCES `boraji`.`groups` (`idgroup`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
@@ -516,8 +549,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`, `groupName`) VALUES (1, 2, 'students');
-INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`, `groupName`) VALUES (1, 3, 'students');
+INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`) VALUES (1, 2);
+INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`) VALUES (1, 3);
 
 COMMIT;
 
