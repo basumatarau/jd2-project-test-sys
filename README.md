@@ -11,8 +11,8 @@
   results and (possibly) feedback collection;
 </li>
 </ol>
-
-**environment: tomcat9, spring-core v.5.x, spring-security v.5.x, hibernate v.5.x, MariaDB v.10.3**
+ 
+**stack: Linux, Tomcat(v9), MySql(MariaDB v10.3), Java(spring-core v.5.x, spring-security v.5.x, hibernate v.5.x), Bootstrap(v4)**
 
 db schema:
 ![](db-schema-picture-04.png)
