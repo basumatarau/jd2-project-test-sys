@@ -8,12 +8,13 @@
 
 <body>
     <jsp:include page="include/header.jsp"/>
-	<h2>Access Denied - You are not authorized to access this resource.</h2>
+    <div class="container">
+        <h2>Access Denied - You are not authorized to access this resource.</h2>
 
-	<hr>
-	
-	<a href="${pageContext.request.contextPath}/">Back to Home Page</a>
-	
+        <hr>
+
+        <a href="${pageContext.request.contextPath}/">Back to Home Page</a>
+	</div>
 </body>
 
 </html>

@@ -12,6 +12,45 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>test system</title>
     <jsp:include page="include/default-js-css-res.jsp"/>
+    <style>
+
+        div.right-answer{
+            background-color: #80ff9f;
+        }
+
+        div.wrong-answer{
+            background-color: #ff8080;
+        }
+
+        div.answer-form{
+            margin: 5px;
+            padding: 5px;
+        }
+
+        div.question-form {
+            margin: 10px;
+            padding: 10px;
+            border-style: solid;
+            border-width: 2px;
+            border-color: #666699;
+            border-radius: 10px;
+        }
+
+        p.answer-body{
+            margin: 5px;
+            padding: 5px;
+        }
+
+        div.test-question{
+            margin: 10px;
+            padding: 15px;
+        }
+
+        #assignment-details{
+            margin: 20px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <jsp:include page="include/header.jsp" />
@@ -24,49 +63,57 @@
             <a href="${pageContext.request.contextPath}/assignment-manager">back to managed assignments</a>
         </div>
         <div class="container">
-                <div>
-                    <div>
-                        assignment name: ${submittedAssignment.name}
-                    </div>
-                    <div>
-                        assignment details: ${submittedAssignment.details}
-                    </div>
-                    <div>
-                        assigner: ${submittedAssignment.assigner.getFirstName()} ${submittedAssignment.assigner.getLastName()}
-                    </div>
-                    <div class="jumbotron">
+            <div id="assignment-details">
+                <dl class="row">
+                    <dt class="col-sm-4">Assignment name:</dt> <dd class="col-sm-8">${submittedAssignment.name}</dd>
+                    <dt class="col-sm-4">Assignment details:</dt> <dd class="col-sm-8">${submittedAssignment.details}</dd>
+                    <dt class="col-sm-4">Assignee:</dt> <dd class="col-sm-8">${submittedAssignment.assignee.getFirstName()} ${submittedAssignment.assignee.getLastName()}</dd>
+                </dl>
+            </div>
+                    <div class="container">
                         <c:forEach items="${submittedAssignment.submittedQuestionSet}" var="submittetdQuestion">
-                            <div>
-                                <div>
-                                    ${submittetdQuestion.masterQuestion.body}
+                            <div class="question-form">
+                                <div class="test-question">
+                                    <p class="test-question-body">${submittetdQuestion.masterQuestion.body}</p>
                                 </div>
-                                <div>
+                                <div class="test-answers">
                                     <c:forEach items="${submittetdQuestion.submittedAnswerSet}" var="submittedAnswer">
                                         <c:choose>
                                             <c:when test="${submittedAnswer.masterAnswer.isFalse() == submittedAnswer.isGivenAnswer()}">
-                                                <div style="background-color:#ff8080" class="row">
-                                                <div>
-                                                    <c:choose>
-                                                        <c:when test="${submittedAnswer.masterAnswer.isFalse()}">
-                                                            <span class="badge badge-pill badge-info">should NOT be chosen</span>
-                                                        </c:when>
-                                                        <c:when test="${!submittedAnswer.masterAnswer.isFalse()}">
-                                                            <span class="badge badge-pill badge-info">should be chosen</span>
-                                                        </c:when>
-                                                    </c:choose>
+                                                <div class="answer-form wrong-answer row">
+                                                    <div>
+                                                        <c:choose>
+                                                            <c:when test="${submittedAnswer.masterAnswer.isFalse()}">
+                                                                <span class="badge badge-pill badge-info">should NOT be chosen</span>
+                                                            </c:when>
+                                                            <c:when test="${!submittedAnswer.masterAnswer.isFalse()}">
+                                                                <span class="badge badge-pill badge-info">should be chosen</span>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </div>
+                                                    <div>
+                                                        <p class="answer-body">${submittedAnswer.masterAnswer.body}</p>
+                                                    </div>
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${submittedAnswer.masterAnswer.isFalse() != submittedAnswer.isGivenAnswer() && !submittedAnswer.masterAnswer.isFalse()}">
+                                                <div class="answer-form right-answer row">
+                                                    <div>
+                                                        <span class="badge badge-pill badge-info">ok</span>
+                                                    </div>
+                                                    <div>
+                                                        <p class="answer-body">${submittedAnswer.masterAnswer.body}</p>
+                                                    </div>
                                                 </div>
                                             </c:when>
                                             <c:otherwise>
-                                                <div style="background-color:#80ff9f" class="row">
-                                                <div>
-                                                    <span class="badge badge-pill badge-info">ok</span>
+                                                <div class="answer-form row">
+                                                    <div>
+                                                        <p class="answer-body">${submittedAnswer.masterAnswer.body}</p>
+                                                    </div>
                                                 </div>
                                             </c:otherwise>
                                         </c:choose>
-                                            <div>
-                                                ${submittedAnswer.masterAnswer.body}
-                                            </div>
-                                        </div>
                                     </c:forEach>
                                 </div>
                             </div>

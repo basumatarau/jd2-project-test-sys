@@ -12,24 +12,36 @@
     <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>test system</title>
     <jsp:include page="include/default-js-css-res.jsp"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
 </head>
 <body>
     <jsp:include page="include/header.jsp" />
+
     <div class="container">
         <h1>Make a new assignment</h1>
-        <form:form action="new-assignment/processNewAssignment" modelAttribute="newAssignmentDetails" method="post">
-            <div class="container">
-                Enter assignment name:
-                <form:input placeholder="name" path="name" />
-                <br />
-                Provide assignment details:
-                <form:input placeholder="details" path="details" />
-                <br />
-                Provide assignment due date:
-                <form:input placeholder="dueDate" path="dueDate" />
-                <br />
+        <div class="container">
+            <form action="${pageContext.request.contextPath}/assignment-manager/new-assignment/processNewAssignment" method="POST">
+                <div class="form-group row">
+                    <label for="input-assignment-name" class="col-sm-4 col-form-label">Enter assignment name:</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="name" name="name" placeholder="name">
+                    </div>
+                </div>
+                    <div class="form-group row">
+                    <label for="input-assignment-details" class="col-sm-4 col-form-label">Enter assignment details:</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" id="details" name="details" placeholder="details">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="dueDate" class="col-sm-4 col-form-label">Set the assignment due date:</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control-plaintext" data-date-format="yyyy-mm-dd" id="datepicker" name="dueDate" placeholder="[picker]" value="">
+                    </div>
+                </div>
+
                 <div>
-                    Pick assignees:
+                    Select assignees:
                     <c:choose>
                         <c:when test="${!followers.isEmpty()}" >
                             <table class="table table-bordered">
@@ -48,7 +60,7 @@
                                             <td>${user.firstName} ${user.lastName}</td>
                                             <td>${user.email}</td>
                                             <td>
-                                                <form:checkbox path="assigneeIds" value="${user.getId()}"/>
+                                                <input type="checkbox" name="assigneeIds" id="assigneeIds" placeholder="assigneeIds" value="${user.getId()}">
                                             </td>
                                         </tr>
                                     </c:forEach>
@@ -61,7 +73,7 @@
                     </c:choose>
                 </div>
                 <div>
-                    Select the test for the assignment:
+                    Pick the test for the assignment:
                     <c:choose>
                         <c:when test="${!tests.isEmpty()}" >
                             <div>
@@ -82,7 +94,7 @@
                                                     <td>${test.name}</td>
                                                     <td>${test.description}</td>
                                                     <td>
-                                                        <form:radiobutton path="assignedTestId" value="${test.getId()}"/>
+                                                        <input type="radio" name="assignedTestId" id="assignedTestId" value="${test.getId()}" />
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -107,9 +119,20 @@
                         </c:when>
                     </c:choose>
                 </div>
-            </div>
-            <input type="submit" value="Create New Assignment!" />
-        </form:form>
+                <div id="submit-test-div">
+                    <button type="submit" class="btn btn-success btn-lg btn-block">Create New Assignment!</button>
+                </div>
+            </form>
+        </div>
     </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(function() {
+                $("#datepicker").datepicker({
+
+                });
+              });
+        });
+    </script>
 </body>
 </html>
