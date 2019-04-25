@@ -12,7 +12,7 @@
 </li>
 </ol>
  
-**stack: Linux, Tomcat(v9), MySql(MariaDB v10.3), Java(spring-core v.5.x, spring-security v.5.x, hibernate v.5.x), Bootstrap(v4)**
+**stack: Tomcat(v9), MySql(MariaDB v10.3), Java(spring-core v.5.x, spring-security v.5.x, hibernate v.5.x), Bootstrap(v4)**
 
 db schema:
-![](db-schema-picture-04.png)
+![](db-schema-picture-05.png)
