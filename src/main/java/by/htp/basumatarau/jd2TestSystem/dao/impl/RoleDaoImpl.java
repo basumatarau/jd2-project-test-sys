@@ -25,7 +25,7 @@ public class RoleDaoImpl implements RoleDao {
     public Role findByName(String roleName) {
         return sessionFactory.getCurrentSession()
                 .createQuery("from Role r " +
-                        "join fetch r.authorities " +
+                        "left outer join fetch r.authorities " +
                         "where r.name=:name", Role.class)
                 .setParameter("name", roleName).getSingleResult();
     }

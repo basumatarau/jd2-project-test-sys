@@ -15,17 +15,37 @@
 	<div class="collapse navbar-collapse justify-content-between"
 		id="navbarNav">
 		<ul class="navbar-nav mr-auto">
-			<li class="nav-item active"><a class="nav-link"
-				href="<spring:url value="/assignment-manager"/>">Assignment
-					Manager</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="<spring:url value="/my-assignments"/>">My Assignments</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="<spring:url value="/subscribers" />">Subscribers</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="<spring:url value="/subscription" />">Subscription</a></li>
-			<li class="nav-item"><a class="nav-link"
-				href="<spring:url value="/my-resources" />">My Resources</a></li>
+		    <sec:authorize access="hasAnyRole('ADMIN','TEACHER')">
+                <li class="nav-item active"><a class="nav-link"
+                    href="<spring:url value="/assignment-manager"/>">Assignment
+                        Manager</a>
+                </li>
+			</sec:authorize>
+			<sec:authorize access="hasAnyRole('ADMIN','TEACHER','STUDENT')">
+                <li class="nav-item"><a class="nav-link"
+                    href="<spring:url value="/my-assignments"/>">My Assignments</a>
+                </li>
+            </sec:authorize>
+			<sec:authorize access="hasAnyRole('ADMIN','TEACHER')">
+                <li class="nav-item"><a class="nav-link"
+                    href="<spring:url value="/subscribers" />">Subscribers</a>
+                </li>
+			</sec:authorize>
+			<sec:authorize access="hasAnyRole('ADMIN','TEACHER','STUDENT')">
+                <li class="nav-item"><a class="nav-link"
+                    href="<spring:url value="/subscription" />">Subscription</a>
+                </li>
+            </sec:authorize>
+		    <sec:authorize access="hasAnyRole('ADMIN','TEACHER')">
+                <li class="nav-item"><a class="nav-link"
+                    href="<spring:url value="/my-resources" />">My Resources</a>
+                </li>
+		    </sec:authorize>
+			<sec:authorize access="hasRole('ADMIN')">
+                <li class="nav-item"><a class="nav-link"
+                    href="<spring:url value="/admin"/>">Admin page</a>
+                </li>
+			</sec:authorize>
 		</ul>
 		<ul class="navbar-nav">
 			<li><span class="navbar-text" class="pull-right"> <sec:authorize

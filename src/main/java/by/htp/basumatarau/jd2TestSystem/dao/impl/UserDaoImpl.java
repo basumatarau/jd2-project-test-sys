@@ -25,7 +25,7 @@ public class UserDaoImpl implements UserDao {
         Query<User> query = sessionFactory.getCurrentSession()
                 .createQuery("from User u " +
                         "join fetch u.roles role " +
-                        "join fetch role.authorities " +
+                        "left outer join fetch role.authorities " +
                         "where u.email=:email ", User.class);
         query.setParameter("email", email);
 
@@ -44,7 +44,7 @@ public class UserDaoImpl implements UserDao {
         Query<User> query = sessionFactory.getCurrentSession()
                 .createQuery("from User u " +
                         "join fetch u.roles role " +
-                        "join fetch role.authorities " +
+                        "left outer join fetch role.authorities " +
                         "where u.id=:id ", User.class);
         query.setParameter("id", id);
 

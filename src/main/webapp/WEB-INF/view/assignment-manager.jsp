@@ -18,14 +18,16 @@
 	<div class="container">
 
 		<h1>Assignment manager</h1>
-
-		<ul>
-			<h3>
-				<li><a
-					href="${pageContext.request.contextPath}/assignment-manager/new-assignment" />new
-					assignment</a></li>
-			</h3>
-		</ul>
+        <sec:authorize access="hasAnyRole('ADMIN','TEACHER')">
+            <ul>
+                <h3>
+                    <li><a
+                        href="${pageContext.request.contextPath}/assignment-manager/new-assignment" />new
+                        assignment</a>
+                    </li>
+                </h3>
+            </ul>
+		</sec:authorize>
 	</div>
 
 	<div class="container">
