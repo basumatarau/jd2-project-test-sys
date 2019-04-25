@@ -1,35 +1,34 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
-import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
-import by.htp.basumatarau.jd2TestSystem.dao.exception.UserCredentialsNotRegistered;
+import by.htp.basumatarau.jd2TestSystem.dto.NewAssignmentDto;
+import by.htp.basumatarau.jd2TestSystem.dto.UserDto;
 import by.htp.basumatarau.jd2TestSystem.model.Authority;
 import by.htp.basumatarau.jd2TestSystem.model.User;
+import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
 import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
+import by.htp.basumatarau.jd2TestSystem.service.exception.UserCredentialsOccupied;
 import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
-import java.security.SecureRandom;
+import java.util.List;
 import java.util.Set;
 
 @Controller
 public class HomeController {
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    private SecureRandom secureRandom;
+    private static final int ENTRIES_PER_PAGE = 10;
 
     @Autowired
     private UserService userService;
@@ -49,39 +48,55 @@ public class HomeController {
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
     public ModelAndView registration(
-            @RequestParam(value = "firstNameInput") String firstName,
-            @RequestParam(value = "lastNameInput") String lastName,
-            @RequestParam(value = "emailinput") String email,
-            @RequestParam(value = "passwordinput") String passowrd
+            @ModelAttribute("accountDetails") UserDto dto
     ) throws ServiceException{
 
         ModelAndView mav = new ModelAndView();
         try {
-            if (userService.getUserByUserEmail(email) != null) {
-                mav.addObject("occupiedCredentials", "true");
-                mav.setViewName("sign-up");
-                return mav;
-            }
-        }catch (UserServiceException e){
-            //do nothing
+            userService.registerNewUser(dto);
+        }catch (UserCredentialsOccupied e){
+            mav.addObject("occupiedCredentials", "true");
+            mav.setViewName("sign-up");
+            return mav;
         }
-
-        User user = new User();
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEnabled(true);
-        user.setPasswordHash(passwordEncoder.encode(passowrd));
-
-        Authority authority = new Authority();
-        authority.setAuthority("ROLE_USER");
-        authority.setUser(user);
-
-        user.setAuthoritySet(Set.of(authority));
-        userService.createNewUser(user);
-
         mav.setViewName("login");
         return mav;
+    }
+
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String adminPage(
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "update", required = false) Integer idUpdate,
+            @RequestParam(value = "delete", required = false) Integer idDelete,
+            Model model,
+            Principal principal) throws UserServiceException {
+
+        CustomUser customUser
+                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = customUser.getCurrentUser();
+
+        if(idUpdate!=null){
+            User userByUserId = userService.getUserByUserId(idUpdate);
+            userService.update(userByUserId);
+        }
+
+        if(idDelete!=null){
+            User userByUserId = userService.getUserByUserId(idDelete);
+            userService.delete(userByUserId);
+        }
+
+        int topPageEntry = 0;
+        if(page!=null){
+            topPageEntry = (page - 1) * ENTRIES_PER_PAGE;
+        }
+        List<User> userList = userService.getUsers(topPageEntry, ENTRIES_PER_PAGE);
+        long totalUsersCount = userService.getTotalUsersCount();
+
+        model.addAttribute("startpage",1);
+        model.addAttribute("endpage", ((int) (1 + (totalUsersCount / ENTRIES_PER_PAGE))));
+        model.addAttribute("userList", userList);
+
+        return "admin-page";
     }
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.GET)

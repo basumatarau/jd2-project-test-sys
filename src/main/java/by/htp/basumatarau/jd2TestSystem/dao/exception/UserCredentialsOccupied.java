@@ -7,4 +7,7 @@ public class UserCredentialsOccupied extends DaoException {
     public UserCredentialsOccupied(Exception e) {
         super(e);
     }
+    public UserCredentialsOccupied(String msg) {
+        super(msg);
+    }
 }

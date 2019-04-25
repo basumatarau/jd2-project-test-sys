@@ -6,6 +6,8 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
+
 @Repository
 public class AuthorityDaoImpl implements AuthorityDao {
 
@@ -13,7 +15,15 @@ public class AuthorityDaoImpl implements AuthorityDao {
     private SessionFactory sessionFactory;
 
     @Override
-    public void persist(Authority authority) {
-        sessionFactory.getCurrentSession().save(authority);
+    public Authority findByName(String authorityName) {
+        return sessionFactory.getCurrentSession()
+                .createQuery("from Authority a where a.authority=:name", Authority.class)
+                .setParameter("name", authorityName).getSingleResult();
+    }
+
+    @Override
+    public Authority createNewAuthority(Authority authority) {
+        Serializable id = sessionFactory.getCurrentSession().save(authority);
+        return sessionFactory.getCurrentSession().load(Authority.class, id);
     }
 }

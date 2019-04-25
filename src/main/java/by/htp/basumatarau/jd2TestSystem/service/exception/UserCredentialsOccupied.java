@@ -8,4 +8,9 @@ public class UserCredentialsOccupied extends UserServiceException {
     public UserCredentialsOccupied(Exception e) {
         super(e);
     }
+
+    public UserCredentialsOccupied(String msg) {
+        super(msg);
+    }
+
 }

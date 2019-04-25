@@ -4,12 +4,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>test system</title>
-    <jsp:include page="include/default-js-css-res.jsp"/>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>test system</title>
+<jsp:include page="include/default-js-css-res.jsp" />
 </head>
 <body>
-	<jsp:include page="include/header.jsp"/>
+	<jsp:include page="include/header.jsp" />
 	<div class="container">
 		<div>
 			<h1>Welcome to the test system!</h1>

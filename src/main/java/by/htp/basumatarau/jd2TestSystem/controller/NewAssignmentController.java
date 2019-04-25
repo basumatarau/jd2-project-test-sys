@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.Temporal;
 import java.util.Date;
@@ -81,8 +83,6 @@ public class NewAssignmentController {
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();
 
-
-
         for (Integer id : dto.getAssigneeIds()) {
             Assignment newAssignment = new Assignment();
             newAssignment.setName(dto.getName());
@@ -90,9 +90,19 @@ public class NewAssignmentController {
             newAssignment.setMasterTest(testService.getTestById(dto.getAssignedTestId()));
             newAssignment.setAssigner(currentUser);
 
-            newAssignment.setDeadline(new Date());
+            //validation to be implemented properly
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
+            Date parseDate = null;
+            try {
+                parseDate = simpleDateFormat.parse(dto.getDueDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            newAssignment.setDeadline(parseDate);
             newAssignment.setSubmitted(false);
             newAssignment.setAssigner(currentUser);
+
             //todo get follower by id instead of getUser - to be fixed
             newAssignment.setAssignee(userService.getUserByUserId(id));
             assignmentService.createNewAssignment(newAssignment);

@@ -48,22 +48,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .authorizeRequests()
+                    .antMatchers("/subscription**",
+                            "/my-assignments**",
+                            "/my-assignments/start**",
+                            "/page-not-found-404**",
+                            "/access-denied**")                    
+                    .hasAnyRole("ADMIN", "TEACHER", "STUDENT")
+                .and()
+                    .authorizeRequests()
                     .antMatchers("/assignment-manager**",
+                            "/assignment-manager/new-assignment**",
                             "/assignment-manager/delete**",
                             "/assignment-manager/showResult**",
                             "/subscribers**",
-                            "/subscription**",
                             "/my-resources**",
-                            "/my-resources/newTest**",
-                            "/my-assignments**",
-                            "/my-assignments/start**")
-                    .hasAnyRole("ADMIN", "USER", "GUEST")
+                            "/my-resources/newTest**")
+                    .hasAnyRole("ADMIN", "TEACHER")
+                .and()
+                    .authorizeRequests()
+                    .antMatchers("/admin**")
+                    .hasRole("ADMIN")
                 .and()
                     .exceptionHandling()
                     .accessDeniedPage("/access-denied")
                 .and()
                     .csrf().disable();
-        //todo fix the cfg
     }
 
     @Override

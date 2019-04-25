@@ -16,6 +16,7 @@ public class AuthorityServiceImpl implements AuthorityService {
     @Transactional
     @Override
     public void createNewAuthority(Authority authority) {
-        authorityDao.persist(authority);
+
+        authorityDao.createNewAuthority(authority);
     }
 }

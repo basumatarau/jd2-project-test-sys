@@ -34,7 +34,7 @@ public class SubscriptionController {
 
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = userService.getUserByUserId(customUser.getId());
+        User currentUser = customUser.getCurrentUser();
 
         int topPageEntry = 0;
         if(page!=null){

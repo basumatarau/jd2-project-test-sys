@@ -2,6 +2,7 @@ package by.htp.basumatarau.jd2TestSystem.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "authorities")
@@ -15,9 +16,12 @@ public class Authority {
     @Column(name = "authority")
     private String authority;
 
-    @ManyToOne
-    @JoinColumn(name = "users_iduser")
-    private User user;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(name = "roles_has_authorities",
+            joinColumns = {@JoinColumn(name = "authorities_idauthority")},
+            inverseJoinColumns ={@JoinColumn(name = "roles_idrole")}
+    )
+    private Set<Role> roles;
 
     public int getId() {
         return id;
@@ -35,12 +39,12 @@ public class Authority {
         this.authority = authority;
     }
 
-    public User getUser() {
-        return user;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     @Override

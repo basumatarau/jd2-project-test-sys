@@ -31,8 +31,13 @@ public class User {
     @Column(name = "isEnabled")
     private boolean isEnabled;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Authority> authoritySet;
+    @ManyToMany(cascade = {CascadeType.ALL})
+    @JoinTable(
+            name = "users_has_roles",
+            joinColumns = {@JoinColumn(name = "users_iduser")},
+            inverseJoinColumns = {@JoinColumn(name = "roles_idrole")}
+    )
+    private Set<Role> roles;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -155,12 +160,12 @@ public class User {
         isEnabled = enabled;
     }
 
-    public Set<Authority> getAuthoritySet() {
-        return authoritySet;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setAuthoritySet(Set<Authority> authoritySet) {
-        this.authoritySet = authoritySet;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Set<User> getFollowers() {

@@ -1,6 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.config;
 
 import by.htp.basumatarau.jd2TestSystem.model.*;
+import by.htp.basumatarau.jd2TestSystem.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -56,7 +57,8 @@ public class AppConfig {
                 User.class,
                 Assignment.class,
                 SubmittedQuestion.class,
-                SubmittedAnswer.class
+                SubmittedAnswer.class,
+                Role.class
         );
 
         return factoryBean;
