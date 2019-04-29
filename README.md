@@ -1,5 +1,5 @@
 # jd2-project-test-sys
-<h>jd2 course work "test system" implements basic functionality for:<h>
+<h>jd2 course work "quiz system" implements basic functionality for:<h>
 <ol>
  <li>
   quiz tasks compilation/creation (quiz constructor allows to produce your own questions and/or compile test tasks from available ready made categorazed and tagged questions);
