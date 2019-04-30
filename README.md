@@ -1,5 +1,5 @@
 # javaEE coursework (@it-academy)
-<h2> jd2 course work "quiz system" implements basic functionality for: </h2>
+<p> jd2 course work "quiz system" implements basic functionality for: <p>
 <ol>
  <li>
   quiz tasks compilation/creation (quiz constructor allows to produce your own questions and/or compile test tasks from available ready made categorazed and tagged questions);
