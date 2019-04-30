@@ -1,4 +1,4 @@
-# jd2-project-test-sys
+# javaEE coursework (@it-academy)
 <h>jd2 course work "quiz system" implements basic functionality for:<h>
 <ol>
  <li>
