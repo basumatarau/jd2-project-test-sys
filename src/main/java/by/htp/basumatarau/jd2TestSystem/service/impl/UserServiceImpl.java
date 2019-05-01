@@ -1,12 +1,10 @@
 package by.htp.basumatarau.jd2TestSystem.service.impl;
 
-import by.htp.basumatarau.jd2TestSystem.dao.AuthorityDao;
 import by.htp.basumatarau.jd2TestSystem.dao.RoleDao;
-import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
 import by.htp.basumatarau.jd2TestSystem.dao.exception.UserCredentialsNotRegistered;
+import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.dto.UserDto;
-import by.htp.basumatarau.jd2TestSystem.model.Authority;
 import by.htp.basumatarau.jd2TestSystem.model.Role;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
@@ -48,11 +46,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User getUserByUserId(int id) throws UserServiceException {
-        User result;
-        try {
-            result = userDao.getUserByUserId(id);
-        }catch (DaoException e) {
-            throw new UserServiceException("failed to fetch user with id=" + id + "...", e);
+        User result = userDao.findById(id);
+        if(result == null){
+            throw new UserServiceException("failed to fetch user with id=" + id + "...");
         }
         return result;
     }
@@ -66,8 +62,6 @@ public class UserServiceImpl implements UserService {
             }
         }catch (UserCredentialsNotRegistered e){
             //log proceed with the registration;
-        }catch (DaoException e){
-            throw new UserServiceException(e);
         }
 
         Role student = roleDao.findByName("ROLE_STUDENT");
@@ -79,31 +73,19 @@ public class UserServiceImpl implements UserService {
         newUser.setPasswordHash(passwordEncoder.encode(accountDetailsDto.getPassword()));
         newUser.setRoles(Set.of(student));
 
-        try {
-            userDao.persist(newUser);
-        }catch (DaoException e) {
-            throw new UserServiceException("failed to create new user", e);
-        }
+        userDao.save(newUser);
     }
 
     @Transactional
     @Override
-    public void update(User user) throws UserServiceException{
-        try {
-            userDao.update(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to update user", e);
-        }
+    public void update(User user) {
+        userDao.saveOrUpdate(user);
     }
 
     @Transactional
     @Override
-    public void delete(User user) throws UserServiceException{
-        try {
-            userDao.delete(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to delete user", e);
-        }
+    public void delete(User user) {
+        userDao.delete(user);
     }
 
     @Transactional
@@ -112,7 +94,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userDao.getFollowers(user);
         } catch (DaoException e) {
-            throw new UserServiceException("failed to load set of followers", e);
+            throw new UserServiceException("failed to retrieve a set of followers", e);
         }
     }
 
@@ -122,26 +104,20 @@ public class UserServiceImpl implements UserService {
         try {
             return userDao.getFollowedUsers(user);
         } catch (DaoException e) {
-            throw new UserServiceException("failed to load set of followed users", e);
+            throw new UserServiceException("failed to retrieve a set of followed users: " + e.getMessage(), e);
         }
     }
 
     @Transactional
     @Override
-    public List<User> getUsers(int start, int amount) throws UserServiceException{
-        List<User> users = null;
-        try {
-            users = userDao.getUsers(start, amount);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to fetch user list", e);
-        }
-        return users;
+    public List<User> getUsers(int start, int amount) {
+        return userDao.getPaginated(start, amount);
     }
 
     @Transactional
     @Override
     public long getTotalUsersCount() {
-        return userDao.getNumberOfUsers();
+        return userDao.getTotalCount();
     }
 
     @Transactional
@@ -153,11 +129,7 @@ public class UserServiceImpl implements UserService {
         }
         followedUsers.add(followedUser);
         user.setFollowedUsers(followedUsers);
-        try {
-            userDao.merge(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to update followed users list", e);
-        }
+        userDao.saveOrUpdate(user);
     }
 
     @Transactional
@@ -169,11 +141,7 @@ public class UserServiceImpl implements UserService {
         }
         followers.add(follower);
         user.setFollowers(followers);
-        try {
-            userDao.merge(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to update followers list", e);
-        }
+        userDao.saveOrUpdate(user);
     }
 
     @Transactional
@@ -185,11 +153,7 @@ public class UserServiceImpl implements UserService {
         }
         followedUsers.remove(followedUser);
         user.setFollowedUsers(followedUsers);
-        try {
-            userDao.merge(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to update followed users list", e);
-        }
+        userDao.saveOrUpdate(user);
     }
 
     @Transactional
@@ -201,10 +165,6 @@ public class UserServiceImpl implements UserService {
         }
         followers.remove(follower);
         user.setFollowers(followers);
-        try {
-            userDao.merge(user);
-        } catch (DaoException e) {
-            throw new UserServiceException("failed to update followers list", e);
-        }
+        userDao.saveOrUpdate(user);
     }
 }

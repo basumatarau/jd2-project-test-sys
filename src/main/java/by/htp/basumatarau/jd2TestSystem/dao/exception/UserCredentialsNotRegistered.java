@@ -7,4 +7,7 @@ public class UserCredentialsNotRegistered extends DaoException {
     public UserCredentialsNotRegistered(Exception e) {
         super(e);
     }
+    public UserCredentialsNotRegistered(String message) {
+        super(message);
+    }
 }

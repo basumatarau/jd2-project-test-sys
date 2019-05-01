@@ -13,7 +13,7 @@ public class MvcWebApplicationInitializer
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{WebConfig.class};
+        return new Class[]{WebMvcConfig.class};
     }
 
     @Override

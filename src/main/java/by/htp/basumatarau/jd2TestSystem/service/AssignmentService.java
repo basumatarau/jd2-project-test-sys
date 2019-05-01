@@ -6,8 +6,6 @@ import by.htp.basumatarau.jd2TestSystem.model.User;
 import java.util.List;
 
 public interface AssignmentService {
-    List<Assignment> getAllAssignmentsForAssigner(User user);
-    List<Assignment> getAllAssignmentsForAssignee(User user);
     List<Assignment> getAssignmentsForAssigner(User user, int idAfter, int entries);
     List<Assignment> getAssignmentsForAssignee(User user, int idAfter, int entries);
     long getNumberOfManagedAssignments(User assigner);
@@ -18,6 +16,6 @@ public interface AssignmentService {
     void createNewAssignment(Assignment assignment);
 
     Assignment getAssignmentDetailed(Integer id);
-    void mergeAssignment(Assignment assignment);
+    void updateAssignment(Assignment assignment);
     Assignment getAssignmentAndSubmittedQuestions(Integer id);
 }

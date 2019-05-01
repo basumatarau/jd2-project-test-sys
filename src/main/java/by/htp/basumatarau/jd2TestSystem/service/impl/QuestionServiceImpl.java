@@ -15,6 +15,6 @@ public class QuestionServiceImpl implements QuestionService{
     @Transactional
     @Override
     public void createNewQuestion(Question question) {
-        questionDao.persist(question);
+        questionDao.save(question);
     }
 }

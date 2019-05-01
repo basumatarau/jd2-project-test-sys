@@ -16,6 +16,6 @@ public class SubmittedAnswerServiceImpl implements SubmittedAnswerService {
     @Transactional
     @Override
     public void persistNewSubmission(SubmittedAnswer answer) {
-        submittedAnswerDao.persist(answer);
+        submittedAnswerDao.save(answer);
     }
 }

@@ -21,54 +21,35 @@ public class TestServiceImpl implements TestService {
 
     @Override
     public Test getTestById(int id) throws ServiceException {
-        Test result;
-        try {
-            result = testDao.getTestById(id);
-        } catch (DaoException e) {
-            throw new ServiceException("failed to fetch test with id=" + id + "...", e);
+        Test retrievedTest = testDao.findById(id);
+        if (retrievedTest == null) {
+            throw new ServiceException("failed to fetch test with id=" + id + "...");
         }
-        return result;
+        return retrievedTest;
     }
 
     @Override
     public List<Test> getTestForUsers(User user) throws ServiceException {
-        List<Test> result;
-        try {
-            result = testDao.getTestsForUser(user);
-        } catch (DaoException e) {
-            throw new ServiceException("failed to fetch tests for user with id="+user.getId()+"...", e);
+        List<Test> retrievedTest = testDao.getTestsForUser(user);
+        if (retrievedTest == null) {
+            throw new ServiceException(
+                    "failed to fetch tests for user with id=" + user.getId() + "...");
         }
-        return result;
+        return retrievedTest;
     }
 
     @Override
-    public List<Test> getTests(int start, int amount) throws ServiceException {
-        List<Test> result;
-        try {
-            result = testDao.getTests(start, amount);
-        } catch (DaoException e) {
-            throw new ServiceException("failed to fetch tests", e);
-        }
-        return result;
+    public List<Test> getTests(int start, int amount) {
+        return testDao.getPaginated(start, amount);
     }
 
     @Override
-    public void createNewTest(Test newTest) throws ServiceException {
-        try {
-            testDao.createNewTest(newTest);
-        } catch (Exception e) {
-            throw new ServiceException("failed to create new test...", e);
-        }
+    public void createNewTest(Test newTest) {
+        testDao.save(newTest);
     }
 
     @Override
-    public long getTotalNumberOfTests() throws ServiceException {
-        long result = 0;
-        try {
-            result = testDao.getTotalNumberOfTests();
-        } catch (DaoException e) {
-            throw  new ServiceException("failed to obtain total count of tests", e);
-        }
-        return result;
+    public long getTotalNumberOfTests() {
+        return testDao.getTotalCount();
     }
 }

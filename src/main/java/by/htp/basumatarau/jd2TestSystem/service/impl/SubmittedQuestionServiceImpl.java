@@ -16,6 +16,6 @@ public class SubmittedQuestionServiceImpl implements SubmittedQuestionService {
     @Transactional
     @Override
     public void persistNewSubmission(SubmittedQuestion question) {
-        submittedQuestionDao.persist(question);
+        submittedQuestionDao.save(question);
     }
 }

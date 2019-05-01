@@ -1,7 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.service.impl;
 
 import by.htp.basumatarau.jd2TestSystem.dao.AssignmentDao;
-import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
@@ -17,9 +16,6 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Autowired
     private AssignmentDao assignmentDao;
 
-    @Autowired
-    private UserDao userDao;
-
     @Transactional
     @Override
     public Assignment getAssignmentAndSubmittedQuestions(Integer id) {
@@ -28,8 +24,8 @@ public class AssignmentServiceImpl implements AssignmentService {
 
     @Transactional
     @Override
-    public void mergeAssignment(Assignment assignment) {
-        assignmentDao.merge(assignment);
+    public void updateAssignment(Assignment assignment) {
+        assignmentDao.saveOrUpdate(assignment);
     }
 
     @Transactional
@@ -41,19 +37,19 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Transactional
     @Override
     public void createNewAssignment(Assignment assignment) {
-        assignmentDao.persistNewAssignment(assignment);
+        assignmentDao.save(assignment);
     }
 
     @Transactional
     @Override
     public void deleteAssignment(Assignment assignment) {
-        assignmentDao.deleteAssignment(assignment);
+        assignmentDao.delete(assignment);
     }
 
     @Transactional
     @Override
     public Assignment getAssignmentById(int id) {
-        return assignmentDao.getAssignmentById(id);
+        return assignmentDao.findById(id);
     }
 
     @Transactional
@@ -66,18 +62,6 @@ public class AssignmentServiceImpl implements AssignmentService {
     @Override
     public long getNumberOfAssignmentsForAssignee(User assignee) {
         return assignmentDao.getNumberOfAssignmentsForAssignee(assignee);
-    }
-
-    @Transactional
-    @Override
-    public List<Assignment> getAllAssignmentsForAssigner(User assigner) {
-        return assignmentDao.getAllAssignmentsForAssigner(assigner);
-    }
-
-    @Transactional
-    @Override
-    public List<Assignment> getAllAssignmentsForAssignee(User assignee) {
-        return assignmentDao.getAllAssignmentsForAssigner(assignee);
     }
 
     @Transactional

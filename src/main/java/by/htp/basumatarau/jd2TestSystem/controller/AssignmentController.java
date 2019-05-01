@@ -1,6 +1,12 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.dto.*;
+import by.htp.basumatarau.jd2TestSystem.dto.TestDto;
+import by.htp.basumatarau.jd2TestSystem.dto.QuestionDto;
+import by.htp.basumatarau.jd2TestSystem.dto.AnswerDto;
+import by.htp.basumatarau.jd2TestSystem.dto.NewTestDto;
+import by.htp.basumatarau.jd2TestSystem.dto.NewQuestionDto;
+import by.htp.basumatarau.jd2TestSystem.dto.NewAnswerDto;
+import by.htp.basumatarau.jd2TestSystem.dto.SubmittedTestDto;
 import by.htp.basumatarau.jd2TestSystem.model.*;
 import by.htp.basumatarau.jd2TestSystem.service.*;
 import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
@@ -48,13 +54,21 @@ public class AssignmentController {
         User currentUser = customUser.getCurrentUser();*/
         //todo auth
 
+        //check if the test with the id exists in the database
         Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(dto.getId());
+
+        //throw exceptions if there is no such questions persisted as the contained in the submission
         Set<SubmittedQuestion> submittedQuestions = dto.getSubmittedQuestionDtos().stream()
                 .map(dtoSq -> {
                     SubmittedQuestion submittedQuestion = new SubmittedQuestion();
                     submittedQuestion.setMasterQuestion(
-                            assignmentDetailed.getMasterTest().getQuestionSet().stream()
-                                    .filter(q -> q.getId() == dtoSq.getId()).findAny().get()
+                            assignmentDetailed.getMasterTest()
+                                    .getQuestionSet()
+                                    .stream()
+                                    .filter(q -> q.getId() == dtoSq.getId())
+                                    .findAny()
+                                    //todo .orElseThrow(() ->new Exception())
+                                    .get()
                     );
                     submittedQuestion.setSubmittedTest(assignmentDetailed);
                     submittedQuestionService.persistNewSubmission(submittedQuestion);
@@ -66,7 +80,9 @@ public class AssignmentController {
                                         submittedQuestion.getMasterQuestion()
                                                 .getAnswerSet().stream()
                                                 .filter(a -> a.getId() == dtoSa.getId())
-                                                .findAny().get()
+                                                .findAny()
+                                                //todo .orElseThrow(() ->new Exception())
+                                                .get()
                                 );
                                 submittedAnswer.setGivenAnswer(dtoSa.isAnswer());
                                 submittedAnswer.setSubmittedQuestion(submittedQuestion);
@@ -77,7 +93,7 @@ public class AssignmentController {
                 }).collect(Collectors.toSet());
         assignmentDetailed.setSubmittedQuestionSet(submittedQuestions);
         assignmentDetailed.setSubmitted(true);
-        assignmentService.mergeAssignment(assignmentDetailed);
+        assignmentService.updateAssignment(assignmentDetailed);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }

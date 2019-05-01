@@ -1,7 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.service.impl.auth;
 
-import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
+import by.htp.basumatarau.jd2TestSystem.dao.UserDao;
 import by.htp.basumatarau.jd2TestSystem.model.Authority;
 import by.htp.basumatarau.jd2TestSystem.model.Role;
 import by.htp.basumatarau.jd2TestSystem.model.User;

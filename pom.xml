@@ -21,6 +21,12 @@
     </properties>
 
     <dependencies>
+        <!-- hibernate validator is to be utilized -->
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>6.0.16.Final</version>
+        </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

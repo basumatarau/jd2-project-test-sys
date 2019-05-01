@@ -3,6 +3,8 @@ package by.htp.basumatarau.jd2TestSystem.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
@@ -10,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.*;
 @ComponentScans(value =
         {@ComponentScan("by.htp.basumatarau.jd2TestSystem.controller"),
         @ComponentScan("by.htp.basumatarau.jd2TestSystem.config.advice")})
-public class WebConfig implements WebMvcConfigurer {
+public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         registry.jsp().prefix("/WEB-INF/view/").suffix(".jsp");
@@ -22,4 +24,11 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("/resources/");
     }
 
+    @Override
+    public Validator getValidator() {
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        //message source is to be set here
+        
+        return validator;
+    }
 }
