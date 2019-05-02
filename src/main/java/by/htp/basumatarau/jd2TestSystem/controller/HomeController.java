@@ -1,8 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.dto.NewAssignmentDto;
 import by.htp.basumatarau.jd2TestSystem.dto.UserDto;
-import by.htp.basumatarau.jd2TestSystem.model.Authority;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
@@ -12,18 +10,18 @@ import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class HomeController {
@@ -35,6 +33,11 @@ public class HomeController {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @ModelAttribute("accountDetails")
+    public UserDto signUpFromBackingObject(){
+        return new UserDto();
+    }
 
     @RequestMapping(value = "/")
     public String homePage(Model model, Principal principal){
@@ -48,14 +51,26 @@ public class HomeController {
 
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
     public ModelAndView registration(
-            @ModelAttribute("accountDetails") UserDto dto
-    ) throws ServiceException{
-
+            @ModelAttribute("accountDetails") @Valid UserDto dto,
+            BindingResult bindingResult
+    ) {
         ModelAndView mav = new ModelAndView();
+
+        if(bindingResult.hasErrors()){
+            mav.addObject("bindingErrors", bindingResult.getFieldErrors());
+            mav.setViewName("sign-up");
+            return mav;
+        }
+
         try {
             userService.registerNewUser(dto);
         }catch (UserCredentialsOccupied e){
             mav.addObject("occupiedCredentials", "true");
+            mav.setViewName("sign-up");
+            //todo log the sign-up attempt with occupied credentials
+            return mav;
+        }catch (ServiceException e){
+            mav.addObject("signUpError", "registration attempt has been failed");
             mav.setViewName("sign-up");
             return mav;
         }

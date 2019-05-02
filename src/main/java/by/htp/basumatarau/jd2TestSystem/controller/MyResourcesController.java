@@ -26,7 +26,6 @@ public class MyResourcesController {
     public String resources(
             Model model,
             Principal principal) throws ServiceException {
-        //
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();
@@ -38,12 +37,7 @@ public class MyResourcesController {
     }
 
     @RequestMapping(value = "/newTest", method = RequestMethod.GET)
-    public String newTest() throws ServiceException {
-        CustomUser customUser
-                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = customUser.getCurrentUser();
-
-        //static view
+    public String newTest() {
         return "new-test";
     }
 }

@@ -1,13 +1,26 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Set;
 
 public class NewTestDto {
+    @NotNull
+    @Size(max = 100)
     private String name;
+
+    @NotNull
+    @Size(max = 400)
     private String description;
+
+    @NotNull
+    //@Size(max = 100)
     private Integer duration;
+
     private boolean isPublic;
-    private Set<NewQuestionDto> questions;
+
+    private Set<@Valid NewQuestionDto> questions;
 
     public String getName() {
         return name;

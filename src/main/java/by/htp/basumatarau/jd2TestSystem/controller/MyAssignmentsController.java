@@ -75,7 +75,6 @@ public class MyAssignmentsController {
 
         model.addAttribute("id", id);
 
-        //todo
         return "test-submission-page";
     }
 }

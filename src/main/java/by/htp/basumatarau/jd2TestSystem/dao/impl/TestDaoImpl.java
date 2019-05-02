@@ -2,7 +2,6 @@ package by.htp.basumatarau.jd2TestSystem.dao.impl;
 
 import by.htp.basumatarau.jd2TestSystem.dao.BaseDaoImpl;
 import by.htp.basumatarau.jd2TestSystem.dao.TestDao;
-import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
 import by.htp.basumatarau.jd2TestSystem.model.Test;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import org.hibernate.SessionFactory;

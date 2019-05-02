@@ -13,18 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.util.Date;
-import java.util.LinkedHashSet;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +40,7 @@ public class NewAssignmentController {
     private TestService testService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String showNewAssignment(
+    public String showNewAssignmentConstructor(
             Model model,
             @RequestParam(value = "page", required = false) Integer page)
             throws ServiceException {
@@ -71,44 +67,44 @@ public class NewAssignmentController {
         model.addAttribute("testsForUser", testForUsers);
         model.addAttribute("followers", followers);
 
-        //todo test assignment view
         return "new-assignment";
     }
 
     @RequestMapping(value = "/processNewAssignment", method = RequestMethod.POST)
     public String processNewAssignment(
-            @ModelAttribute("newAssignmentDetails") NewAssignmentDto dto) throws ServiceException {
+            @ModelAttribute("newAssignmentDetails") @Valid NewAssignmentDto dto,
+            BindingResult bindingResult,
+            Model model) throws ServiceException {
 
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();
 
+        if(bindingResult.hasErrors()){
+            bindingResult.getFieldErrors()
+                    .forEach(error -> model.addAttribute(error.getField(), error.getDefaultMessage()));
+
+            model.addAttribute("newAssignmentErrors", bindingResult.getFieldErrors());
+            for (ObjectError allError : bindingResult.getAllErrors()) {
+                allError.toString();
+            }
+            return showNewAssignmentConstructor(model, 1);
+        }
+
+        Test assignedTest = testService.getTestById(dto.getAssignedTestId());
         for (Integer id : dto.getAssigneeIds()) {
             Assignment newAssignment = new Assignment();
             newAssignment.setName(dto.getName());
             newAssignment.setDetails(dto.getDetails());
-            newAssignment.setMasterTest(testService.getTestById(dto.getAssignedTestId()));
+            newAssignment.setMasterTest(assignedTest);
             newAssignment.setAssigner(currentUser);
-
-            //validation to be implemented properly
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-mm-dd");
-            Date parseDate = null;
-            try {
-                parseDate = simpleDateFormat.parse(dto.getDueDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            newAssignment.setDeadline(parseDate);
+            newAssignment.setDeadline(dto.getDueDate());
             newAssignment.setSubmitted(false);
             newAssignment.setAssigner(currentUser);
-
-            //todo get follower by id instead of getUser - to be fixed
             newAssignment.setAssignee(userService.getUserByUserId(id));
             assignmentService.createNewAssignment(newAssignment);
         }
 
-        //todo test assignment view
         return "redirect:/assignment-manager";
     }
 

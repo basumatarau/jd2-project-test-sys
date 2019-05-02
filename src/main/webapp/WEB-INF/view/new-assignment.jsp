@@ -29,8 +29,15 @@
 					<label for="input-assignment-name" class="col-sm-4 col-form-label">Enter
 						assignment name:</label>
 					<div class="col-sm-8">
-						<input class="form-control" id="name" name="name"
-							placeholder="name">
+					    <div>
+                            <input class="form-control" id="name" name="name"
+                                placeholder="name">
+					    </div>
+						<div>
+                            <c:if test="${name != null}">
+                                <p>${name}</p>
+                            </c:if>
+						</div>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -129,6 +136,14 @@
 						</c:when>
 					</c:choose>
 				</div>
+
+
+                <c:if test="${newAssignmentErrors != null}">
+					<c:forEach items="${newAssignmentErrors}" var="error">
+					    <p>${error.getField()} + ${error.getDefaultMessage()}</p>
+					</c:forEach>
+				</c:if>
+
 				<div id="submit-test-div">
 					<button type="submit" class="btn btn-success btn-lg btn-block">Create
 						New Assignment!</button>

@@ -1,11 +1,17 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
 public class NewQuestionDto {
+    @NotNull
+    @Size(max = 1000)
     private String questionBody;
-    private Set<NewAnswerDto> answers;
+
+    private Set<@Valid NewAnswerDto> answers;
 
     public String getQuestionBody() {
         return questionBody;

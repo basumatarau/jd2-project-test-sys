@@ -1,8 +1,9 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
-import java.util.Set;
+import javax.validation.constraints.NotNull;
 
 public class SubmittedAnswerDto {
+    @NotNull
     private Integer id;
     private boolean answer;
 

@@ -49,10 +49,7 @@ public class AssignmentController {
 
     @RequestMapping(value = "/assignment-test", method = RequestMethod.POST)
     public ResponseEntity getAssignment(@RequestBody SubmittedTestDto dto){
-        /*CustomUser customUser
-                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = customUser.getCurrentUser();*/
-        //todo auth
+        //todo auth?
 
         //check if the test with the id exists in the database
         Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(dto.getId());

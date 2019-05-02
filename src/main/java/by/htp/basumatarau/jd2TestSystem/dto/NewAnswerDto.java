@@ -1,9 +1,14 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 public class NewAnswerDto {
+    @NotNull
+    @Size (max = 200)
     private String answerBody;
+
     private boolean isChecked;
 
     public String getAnswerBody() {

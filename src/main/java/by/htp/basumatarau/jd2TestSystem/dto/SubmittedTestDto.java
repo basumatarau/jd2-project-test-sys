@@ -1,10 +1,13 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 public class SubmittedTestDto {
+    @NotNull
     private Integer id;
-    private Set<SubmittedQuestionDto> submittedQuestionDtos;
+    private Set<@Valid SubmittedQuestionDto> submittedQuestionDtos;
 
     public Integer getId() {
         return id;

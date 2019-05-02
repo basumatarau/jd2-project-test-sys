@@ -5,7 +5,6 @@ import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
 import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
-import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.util.List;
 @Controller
 @RequestMapping(value = "/assignment-manager")
@@ -31,12 +29,11 @@ public class AssignmentManagerController {
     @RequestMapping
     public String assignmentManager(
             @RequestParam(value = "page", required = false) Integer page,
-                    Model model,
-                    Principal principal) throws ServiceException{
+                    Model model) {
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        User assigner = userService.getUserByUserId(customUser.getId());
+        User assigner = customUser.getCurrentUser();
 
         long assignmentListSize = assignmentService.getNumberOfManagedAssignments(assigner);
 
@@ -57,21 +54,17 @@ public class AssignmentManagerController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     public String deleteAssignment(
             @RequestParam("id") Integer id,
-            Model model,
-            Principal principal) throws ServiceException{
+            Model model){
         assignmentService.deleteAssignment(assignmentService.getAssignmentById(id));
-        return assignmentManager(1, model, principal);
+        return assignmentManager(1, model);
     }
 
     @RequestMapping(value = "/showResult", method = RequestMethod.GET)
     public String showResult(
             @RequestParam("id") Integer id,
-            Model model,
-            Principal principal) throws ServiceException{
-
+            Model model){
         Assignment assignmentDetailed = assignmentService.getAssignmentAndSubmittedQuestions(id);
         model.addAttribute("submittedAssignment", assignmentDetailed);
-
         return "assignment-results";
     }
 }

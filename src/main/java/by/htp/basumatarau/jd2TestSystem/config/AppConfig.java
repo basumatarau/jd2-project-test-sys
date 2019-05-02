@@ -36,7 +36,7 @@ public class AppConfig {
         properties.put(PASS, environment.getProperty("mysql.password"));
 
         properties.put(SHOW_SQL, environment.getProperty("hibernate.show_sql"));
-        //todo schema validation fix
+        //todo schema validator fix
         //properties.put(HBM2DDL_AUTO, environment.getProperty("hibernate.hbm2ddl.auto"));
 
         properties.put(C3P0_MIN_SIZE, environment.getProperty("hibernate.c3p0.min_size"));
