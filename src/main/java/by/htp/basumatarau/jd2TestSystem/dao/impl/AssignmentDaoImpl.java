@@ -108,4 +108,12 @@ public class AssignmentDaoImpl
                 .setParameter("id", assigner.getId())
                 .uniqueResult();
     }
+
+    public void delete(Assignment assignment){
+        sessionFactory.getCurrentSession()
+                .createQuery("delete from Assignment a " +
+                        "where a.id=:id ")
+                .setParameter("id", assignment.getId())
+                .executeUpdate();
+    }
 }

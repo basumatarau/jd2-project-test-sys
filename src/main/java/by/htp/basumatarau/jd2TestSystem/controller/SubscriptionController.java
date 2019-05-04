@@ -1,9 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.controller;
 
-import by.htp.basumatarau.jd2TestSystem.model.Assignment;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.model.auth.CustomUser;
-import by.htp.basumatarau.jd2TestSystem.service.AssignmentService;
 import by.htp.basumatarau.jd2TestSystem.service.UserService;
 import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;

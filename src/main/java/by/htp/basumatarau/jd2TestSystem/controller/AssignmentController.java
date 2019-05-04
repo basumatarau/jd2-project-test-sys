@@ -99,9 +99,6 @@ public class AssignmentController {
     @ResponseBody
     public TestDto getAssignment(
             @RequestParam(value = "id") Integer id){
-        /*CustomUser customUser
-                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = customUser.getCurrentUser();*/
 
         Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(id);
         TestDto testDto = new TestDto();
@@ -130,9 +127,6 @@ public class AssignmentController {
     @RequestMapping(value = "/new-assignment-test", method = RequestMethod.POST)
     public ResponseEntity createSimpleTestAndQuestions(@RequestBody NewTestDto dto)
             throws ServiceException {
-        /*CustomUser customUser
-                = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currentUser = customUser.getCurrentUser();*/
         User currentUser = userService.getUserByUserId(1);
         //todo auth
 

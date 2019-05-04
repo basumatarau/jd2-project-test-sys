@@ -13,4 +13,5 @@ public interface AssignmentDao
     long getNumberOfAssignmentsForAssignee(User assignee);
     Assignment getAssignmentDetailed(Integer id);
     Assignment getAssignmentAndSubmittedQuestions(Integer id);
+    void delete(Assignment assignment);
 }

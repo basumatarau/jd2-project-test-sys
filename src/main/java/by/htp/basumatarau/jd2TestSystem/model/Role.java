@@ -22,12 +22,7 @@ public class Role {
     )
     private Set<Authority> authorities;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "users_has_roles",
-            joinColumns = {@JoinColumn(name = "roles_idrole")},
-            inverseJoinColumns = {@JoinColumn(name = "users_iduser")}
-    )
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
     public int getId() {

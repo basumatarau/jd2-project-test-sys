@@ -4,6 +4,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
@@ -31,11 +32,6 @@ public abstract class BaseDaoImpl<T, Id extends Serializable>
     @Override
     public void saveOrUpdate(T entity) {
         sessionFactory.getCurrentSession().saveOrUpdate(entity);
-    }
-
-    @Override
-    public void delete(T entity) {
-        sessionFactory.getCurrentSession().delete(entity);
     }
 
     @Override
@@ -82,6 +78,11 @@ public abstract class BaseDaoImpl<T, Id extends Serializable>
     @Override
     public T findById(Id id) {
         return sessionFactory.getCurrentSession().get(entityType, id);
+    }
+
+    @Override
+    public void merge(T entity) {
+        sessionFactory.getCurrentSession().merge(entity);
     }
 
     @Override

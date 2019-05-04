@@ -16,11 +16,7 @@ public class Authority {
     @Column(name = "authority")
     private String authority;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(name = "roles_has_authorities",
-            joinColumns = {@JoinColumn(name = "authorities_idauthority")},
-            inverseJoinColumns ={@JoinColumn(name = "roles_idrole")}
-    )
+    @ManyToMany(mappedBy = "authorities")
     private Set<Role> roles;
 
     public int getId() {

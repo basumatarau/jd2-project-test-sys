@@ -1,6 +1,5 @@
 package by.htp.basumatarau.jd2TestSystem.service;
 
-import by.htp.basumatarau.jd2TestSystem.dao.exception.DaoException;
 import by.htp.basumatarau.jd2TestSystem.dto.UserDto;
 import by.htp.basumatarau.jd2TestSystem.model.User;
 import by.htp.basumatarau.jd2TestSystem.service.exception.UserServiceException;
@@ -26,4 +25,6 @@ public interface UserService {
     void removeFollowedUser(User user, User followedUser) throws UserServiceException;
     void removeFollower(User user, User follower) throws UserServiceException;
 
+    void addRole(User user, String roleName);
+    void removeRole(User user, String roleName);
 }

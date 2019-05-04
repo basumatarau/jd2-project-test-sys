@@ -1,9 +1,26 @@
 package by.htp.basumatarau.jd2TestSystem.dto;
 
+import by.htp.basumatarau.jd2TestSystem.validator.ValidEmail;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class UserDto {
+
+    @NotNull
+    @Size(max = 60)
     private String firstName;
+
+    @NotNull
+    @Size(max = 60)
     private String lastName;
+
+    @NotNull
+    @Size(max = 40)
     private String password;
+
+    @NotNull
+    @ValidEmail
     private String email;
 
     public String getFirstName() {

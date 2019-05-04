@@ -8,6 +8,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -21,6 +22,18 @@ public class UserDaoImpl
     public UserDaoImpl(){
         super();
         setEntityType(User.class);
+    }
+
+    @Override
+    public List<User> getPaginated(int first, int pageLength) {
+        return sessionFactory
+                .getCurrentSession()
+                .createQuery("from User u " +
+                        "left outer join fetch u.roles ",
+                        User.class)
+                .setMaxResults(pageLength)
+                .setFirstResult(first)
+                .getResultList();
     }
 
     @Override
@@ -67,5 +80,14 @@ public class UserDaoImpl
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    public void delete(User user){
+        sessionFactory
+                .getCurrentSession()
+                .createQuery("delete from User u " +
+                        " where u.id=:id")
+                .setParameter("id", user.getId())
+                .executeUpdate();
     }
 }

@@ -13,6 +13,6 @@ public class EmailValidator
     public boolean isValid(String email, ConstraintValidatorContext constraintValidatorContext) {
         return email != null
                 && email.length() < 60
-                && email.matches("([\\w\\d-_]+)@(\\w{1,5})");
+                && email.matches("([\\w\\d-_]+)@([\\w\\d-_]+)[.](\\w{1,5})");
     }
 }

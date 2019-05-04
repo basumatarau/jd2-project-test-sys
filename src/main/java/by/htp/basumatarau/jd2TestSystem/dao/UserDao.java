@@ -9,4 +9,5 @@ public interface UserDao extends BaseDao<User, Integer> {
     Set<User> getFollowers(User user) throws UserCredentialsNotRegistered;
     Set<User> getFollowedUsers(User user) throws UserCredentialsNotRegistered;
     User findUserByEmail(String email) throws UserCredentialsNotRegistered;
+    void delete(User user);
 }

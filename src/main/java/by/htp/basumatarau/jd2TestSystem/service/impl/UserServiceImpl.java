@@ -129,7 +129,7 @@ public class UserServiceImpl implements UserService {
         }
         followedUsers.add(followedUser);
         user.setFollowedUsers(followedUsers);
-        userDao.saveOrUpdate(user);
+        userDao.merge(user);
     }
 
     @Transactional
@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserService {
         }
         followers.add(follower);
         user.setFollowers(followers);
-        userDao.saveOrUpdate(user);
+        userDao.merge(user);
     }
 
     @Transactional
@@ -153,7 +153,7 @@ public class UserServiceImpl implements UserService {
         }
         followedUsers.remove(followedUser);
         user.setFollowedUsers(followedUsers);
-        userDao.saveOrUpdate(user);
+        userDao.merge(user);
     }
 
     @Transactional
@@ -165,6 +165,22 @@ public class UserServiceImpl implements UserService {
         }
         followers.remove(follower);
         user.setFollowers(followers);
+        userDao.merge(user);
+    }
+
+    @Transactional
+    @Override
+    public void addRole(User user, String roleName) {
+        Role role = roleDao.findByName(roleName);
+        user.getRoles().add(role);
+        userDao.saveOrUpdate(user);
+    }
+
+    @Transactional
+    @Override
+    public void removeRole(User user, String roleName) {
+        Role role = roleDao.findByName(roleName);
+        user.getRoles().remove(role);
         userDao.saveOrUpdate(user);
     }
 }
