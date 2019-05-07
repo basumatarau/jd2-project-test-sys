@@ -85,9 +85,7 @@ public class NewAssignmentController {
                     .forEach(error -> model.addAttribute(error.getField(), error.getDefaultMessage()));
 
             model.addAttribute("newAssignmentErrors", bindingResult.getFieldErrors());
-            for (ObjectError allError : bindingResult.getAllErrors()) {
-                allError.toString();
-            }
+
             return showNewAssignmentConstructor(model, 1);
         }
 

@@ -31,8 +31,7 @@ public class MyAssignmentsController {
     @RequestMapping
     public String myAssignments(
             @RequestParam(value = "page", required = false) Integer page,
-            Model model,
-            Principal principal) throws UserServiceException {
+            Model model) throws UserServiceException {
 
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -67,8 +66,7 @@ public class MyAssignmentsController {
     @RequestMapping(value = "/start")
     public String startAssignment(
             @RequestParam(value = "id") Integer id,
-            Model model,
-            Principal principal){
+            Model model){
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();

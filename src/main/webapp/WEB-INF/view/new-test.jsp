@@ -224,7 +224,13 @@ div.answer-checkbox {
                 for(var j = 0; j < answerElements.length; j++){
                     var testAnswer = {};
                     testAnswer.answerBody = answerElements[j].getElementsByClassName("test-answer-body")[0].value;
-                    testAnswer.isChecked = answerElements[j].getElementsByClassName("should-be-checked")[0].checked;
+
+                    if(answerElements[j].getElementsByClassName("should-be-checked")[0].checked){
+                        testAnswer.isChecked = true;
+                    }else{
+                        testAnswer.isChecked = false;
+                    }
+
                     testAnswers.push(testAnswer);
                 }
                 question.answers = testAnswers;

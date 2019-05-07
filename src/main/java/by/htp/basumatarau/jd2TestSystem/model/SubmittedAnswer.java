@@ -16,19 +16,25 @@ public class SubmittedAnswer {
     @Column(name = "givenAnswer")
     private boolean givenAnswer;
 
-    @ManyToOne
-    @JoinColumn(name = "submittedQuestions_idsubmittedQuestion")
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            nullable = false,
+            name = "submittedQuestions_idsubmittedQuestion",
+            referencedColumnName = "idsubmittedQuestion")
     private SubmittedQuestion submittedQuestion;
 
-    @ManyToOne
-    @JoinColumn(name = "answers_idanswer")
+    @OneToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            nullable = false,
+            name = "answers_idanswer",
+            referencedColumnName = "idanswer")
     private Answer masterAnswer;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 

@@ -13,8 +13,10 @@ import by.htp.basumatarau.jd2TestSystem.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -48,8 +50,14 @@ public class AssignmentController {
     private AnswerService answerService;
 
     @RequestMapping(value = "/assignment-test", method = RequestMethod.POST)
-    public ResponseEntity getAssignment(@RequestBody SubmittedTestDto dto){
+    public ResponseEntity submitAssignment(
+            @RequestBody @Valid SubmittedTestDto dto,
+            BindingResult bindingResult){
         //todo auth?
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
 
         //check if the test with the id exists in the database
         Assignment assignmentDetailed = assignmentService.getAssignmentDetailed(dto.getId());
@@ -120,15 +128,20 @@ public class AssignmentController {
                 questionDto.getAnswerDtos().add(answerDto);
             }
         }
-
         return testDto;
     }
 
     @RequestMapping(value = "/new-assignment-test", method = RequestMethod.POST)
-    public ResponseEntity createSimpleTestAndQuestions(@RequestBody NewTestDto dto)
-            throws ServiceException {
+    public ResponseEntity createSimpleTestAndQuestions(
+            @RequestBody @Valid NewTestDto dto,
+            BindingResult bindingResult)
+                throws ServiceException {
         User currentUser = userService.getUserByUserId(1);
         //todo auth
+
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }
 
         Test test = new Test();
         test.setAuthor(currentUser);
@@ -136,23 +149,16 @@ public class AssignmentController {
         test.setName(dto.getName());
         test.setDuration(dto.getDuration());
         test.setPublic(dto.isPublic());
-        HashSet<Question> questions = new HashSet<>();
-        test.setQuestionSet(questions);
         for (NewQuestionDto newQuestionDto : dto.getQuestions()) {
-            Question newQuestion = new Question();
-            newQuestion.setAuthor(currentUser);
-            newQuestion.setBody(newQuestionDto.getQuestionBody());
-            questions.add(newQuestion);
-            HashSet<Answer> answers = new HashSet<>();
-            newQuestion.setAnswerSet(answers);
-            questionService.createNewQuestion(newQuestion);
+            Question question = new Question();
+            question.setAuthor(currentUser);
+            question.setBody(newQuestionDto.getQuestionBody());
+            test.addQuestion(question);
             for (NewAnswerDto newAnswerDto : newQuestionDto.getAnswers()) {
                 Answer answer = new Answer();
                 answer.setBody(newAnswerDto.getAnswerBody());
-                answer.setFalse(newAnswerDto.isChecked());
-                answers.add(answer);
-                answer.setQuestion(newQuestion);
-                answerService.createNewAnswer(answer);
+                answer.setFalse(!newAnswerDto.isChecked());
+                question.addAnswer(answer);
             }
         }
         testService.createNewTest(test);

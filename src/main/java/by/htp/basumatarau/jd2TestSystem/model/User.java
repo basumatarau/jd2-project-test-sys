@@ -31,7 +31,11 @@ public class User {
     @Column(name = "isEnabled")
     private boolean isEnabled;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {
+            CascadeType.MERGE,
+            CascadeType.PERSIST,
+            CascadeType.DETACH,
+            CascadeType.REFRESH})
     @JoinTable(
             name = "users_has_roles",
             joinColumns = {@JoinColumn(name = "users_iduser")},
@@ -55,30 +59,17 @@ public class User {
     )
     private Set<User> followedUsers;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "users_has_tests",
-            joinColumns = {@JoinColumn(name = "users_iduser")},
-            inverseJoinColumns = {@JoinColumn(name = "tests_idtest")}
-    )
-    private Set<Test> managedTests;
-
-    @OneToMany(mappedBy = "assignee")
+    @OneToMany(mappedBy = "assignee",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Set<Assignment> assignmentSet;
 
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author",
+            cascade = CascadeType.ALL)
     private Set<Test> authoredTests;
 
     @OneToMany(mappedBy = "author")
     private Set<Question> authoredQuestions;
-
-    public Set<Test> getManagedTests() {
-        return managedTests;
-    }
-
-    public void setManagedTests(Set<Test> managedTests) {
-        this.managedTests = managedTests;
-    }
 
     public Set<Assignment> getAssignmentSet() {
         return assignmentSet;
@@ -189,8 +180,7 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return id == user.id &&
-                isEnabled == user.isEnabled &&
+        return isEnabled == user.isEnabled &&
                 Objects.equals(firstName, user.firstName) &&
                 Objects.equals(lastName, user.lastName) &&
                 Objects.equals(email, user.email) &&
@@ -199,6 +189,6 @@ public class User {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, passwordHash, isEnabled);
+        return Objects.hash(firstName, lastName, email, passwordHash, isEnabled);
     }
 }

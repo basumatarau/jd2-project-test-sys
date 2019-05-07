@@ -13,18 +13,25 @@ public class Answer {
     @Column(name = "idanswer")
     private int id;
 
-    @Column(name = "isFalse")
+    @Column(name = "isFalse", nullable = false)
     private boolean isFalse;
 
-    @Column(name = "body")
+    @Column(name = "body", nullable = false)
     private String body;
 
-    @ManyToOne
-    @JoinColumn(name = "questions_idquestion")
+    @ManyToOne(optional = false)
+    @JoinColumn(
+            foreignKey = @ForeignKey,
+            nullable = false,
+            name = "questions_idquestion",
+            referencedColumnName = "idquestion"
+    )
     private Question question;
 
     @OneToMany(mappedBy = "masterAnswer")
     private Set<SubmittedAnswer> submittedAnswerSet;
+
+    public Answer(){}
 
     public Question getQuestion() {
         return question;
@@ -38,7 +45,7 @@ public class Answer {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -63,12 +70,11 @@ public class Answer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Answer answer = (Answer) o;
-        return id == answer.id &&
-                Objects.equals(body, answer.body);
+        return Objects.equals(body, answer.body);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, body);
+        return Objects.hash(body);
     }
 }

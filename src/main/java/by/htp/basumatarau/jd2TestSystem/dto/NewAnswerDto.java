@@ -23,8 +23,8 @@ public class NewAnswerDto {
         return isChecked;
     }
 
-    public void setChecked(boolean checked) {
-        this.isChecked = checked;
+    public void setIsChecked(boolean checked) {
+        isChecked = checked;
     }
 
     @Override

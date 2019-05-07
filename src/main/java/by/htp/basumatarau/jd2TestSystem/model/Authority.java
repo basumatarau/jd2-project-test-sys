@@ -48,12 +48,11 @@ public class Authority {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Authority authority1 = (Authority) o;
-        return id == authority1.id &&
-                Objects.equals(authority, authority1.authority);
+        return Objects.equals(authority, authority1.authority);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, authority);
+        return Objects.hash(authority);
     }
 }

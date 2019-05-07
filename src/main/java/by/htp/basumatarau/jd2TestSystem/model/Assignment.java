@@ -17,36 +17,46 @@ public class Assignment {
     @Column(name = "isSubmitted")
     private boolean isSubmitted;
 
-    @Column(name = "deadline", columnDefinition = "DATETIME")
+    @Column(name = "deadline",
+            columnDefinition = "DATETIME",
+            nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date deadline;
 
-    @Column(name = "name")
+    @Column(name = "name",
+            nullable = false)
     private String name;
 
     @Column(name = "details")
     private String details;
 
-    @ManyToOne
-    @JoinColumn(name = "users_iduser_assignee")
+    @OneToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            name = "users_iduser_assignee",
+            referencedColumnName = "iduser")
     private User assignee;
 
-    @ManyToOne
-    @JoinColumn(name = "users_iduser_assigner")
+    @OneToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            name = "users_iduser_assigner",
+            referencedColumnName = "iduser")
     private User assigner;
 
-    @ManyToOne
-    @JoinColumn(name = "tests_idtest")
+    @OneToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            name = "tests_idtest",
+            referencedColumnName = "idtest")
     private Test masterTest;
 
-    @OneToMany(mappedBy = "submittedTest")
+    @OneToMany(mappedBy = "submittedTest",
+            cascade = CascadeType.ALL)
     private Set<SubmittedQuestion> submittedQuestionSet;
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -119,8 +129,7 @@ public class Assignment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Assignment that = (Assignment) o;
-        return id == that.id &&
-                isSubmitted == that.isSubmitted &&
+        return isSubmitted == that.isSubmitted &&
                 Objects.equals(deadline, that.deadline) &&
                 Objects.equals(name, that.name) &&
                 Objects.equals(details, that.details) &&
@@ -131,6 +140,6 @@ public class Assignment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, isSubmitted, deadline, name, details, assignee, assigner, masterTest);
+        return Objects.hash(isSubmitted, deadline, name, details, assignee, assigner, masterTest);
     }
 }

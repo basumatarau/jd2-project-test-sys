@@ -1,6 +1,8 @@
 package by.htp.basumatarau.jd2TestSystem.model;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,32 +14,29 @@ public class Question {
     @Column(name = "idquestion")
     private int id;
 
-    @Column(name = "body")
+    @Column(name = "body", nullable = false)
     private String body;
 
     @Column(name = "isOfMultipleChoice")
     private boolean isOfMultipleChoice;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "tests_has_questions",
-            inverseJoinColumns = {@JoinColumn(name = "tests_idtest")},
-            joinColumns = {@JoinColumn(name = "questions_idquestions")}
-    )
-    private Set<Test> testSet;
+    @ManyToMany(mappedBy = "questionSet")
+    private Set<Test> testSet = new LinkedHashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "users_iduser")
     private User author;
 
-    @OneToMany(mappedBy = "question")
-    private Set<Answer> answerSet;
+    @OneToMany(mappedBy = "question",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<Answer> answerSet = new LinkedHashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "subcategories_idsubcategory")
+    @JoinColumn(name = "subcategories_idsubcategory", nullable = true)
     private Subcategory subcategory;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "questions_has_tags",
             inverseJoinColumns = {@JoinColumn(name = "tags_idtag")},
@@ -100,7 +99,7 @@ public class Question {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -118,6 +117,11 @@ public class Question {
 
     public void setOfMultipleChoice(boolean ofMultipleChoice) {
         isOfMultipleChoice = ofMultipleChoice;
+    }
+
+    public void addAnswer(Answer answer){
+        getAnswerSet().add(answer);
+        answer.setQuestion(this);
     }
 
     @Override

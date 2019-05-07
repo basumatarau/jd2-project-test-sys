@@ -1,6 +1,7 @@
 package by.htp.basumatarau.jd2TestSystem.model;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,31 +26,29 @@ public class Test {
     @Column(name = "isPublic")
     private boolean isPublic;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
-    @JoinTable(
-            name = "users_has_tests",
-            inverseJoinColumns = {@JoinColumn(name = "users_iduser")},
-            joinColumns = {@JoinColumn(name = "tests_idtest")}
-    )
-    private Set<User> users;
-
-    @OneToMany(mappedBy = "masterTest")
+    @OneToMany(mappedBy = "masterTest",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Set<Assignment> assignmentSet;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "users_iduser")
     private User author;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    //todo cascade.ALL for test-question relation should be replaced with something narrower
+    //so the questions are not necessarily deleted together with tests
+    @ManyToMany(
+            cascade = {CascadeType.ALL})
     @JoinTable(
             name = "tests_has_questions",
             joinColumns = {@JoinColumn(name = "tests_idtest")},
-            inverseJoinColumns = {@JoinColumn(name = "questions_idquestions")}
-    )
-    private Set<Question> questionSet;
+            inverseJoinColumns = {@JoinColumn(name = "questions_idquestions")})
+    private Set<Question> questionSet = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "masterTest")
-    private Set<Assignment> submittedTestSet;
+    @OneToMany(mappedBy = "masterTest",
+            orphanRemoval = true,
+            cascade = CascadeType.ALL)
+    private Set<Assignment> assignments;
 
     public boolean isPublic() {
         return isPublic;
@@ -57,14 +56,6 @@ public class Test {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
     public Set<Assignment> getAssignmentSet() {
@@ -91,19 +82,19 @@ public class Test {
         this.questionSet = questionSet;
     }
 
-    public Set<Assignment> getSubmittedTestSet() {
-        return submittedTestSet;
+    public Set<Assignment> getAssignments() {
+        return assignments;
     }
 
-    public void setSubmittedTestSet(Set<Assignment> submittedTestSet) {
-        this.submittedTestSet = submittedTestSet;
+    public void setAssignments(Set<Assignment> assignments) {
+        this.assignments = assignments;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 
@@ -131,13 +122,18 @@ public class Test {
         this.duration = duration;
     }
 
+    public void addQuestion(Question question){
+        getQuestionSet().add(question);
+        question.getTestSet().add(this);
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Test test = (Test) o;
-        return id == test.id &&
-                duration == test.duration &&
+        return duration == test.duration &&
                 isPublic == test.isPublic &&
                 Objects.equals(name, test.name) &&
                 Objects.equals(description, test.description) &&
@@ -146,6 +142,6 @@ public class Test {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, duration, isPublic, author);
+        return Objects.hash(name, description, duration, isPublic, author);
     }
 }

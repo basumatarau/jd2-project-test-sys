@@ -16,16 +16,29 @@ public class SubmittedQuestion {
     @Column(name = "feedback")
     private String feedback;
 
-    @ManyToOne
-    @JoinColumn(name = "idassigned_test")
+    @ManyToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            nullable = false,
+            name = "idassigned_test",
+            referencedColumnName = "idassigned_test")
     private Assignment submittedTest;
 
-    @ManyToOne
-    @JoinColumn(name = "idquestion")
+    @OneToOne(optional = false)
+    @JoinColumn(foreignKey = @ForeignKey,
+            nullable = false,
+            name = "idquestion",
+            referencedColumnName = "idquestion")
     private Question masterQuestion;
 
-    @OneToMany(mappedBy = "submittedQuestion")
+    @OneToMany(mappedBy = "submittedQuestion",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private Set<SubmittedAnswer> submittedAnswerSet;
+
+    public void addSubmittedAnswer(SubmittedAnswer answer){
+        answer.setSubmittedQuestion(this);
+        getSubmittedAnswerSet().add(answer);
+    }
 
     public String getFeedback() {
         return feedback;

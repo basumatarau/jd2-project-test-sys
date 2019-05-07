@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -24,8 +23,7 @@ public class MyResourcesController {
 
     @RequestMapping
     public String resources(
-            Model model,
-            Principal principal) throws ServiceException {
+            Model model) throws ServiceException {
         CustomUser customUser
                 = (CustomUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = customUser.getCurrentUser();

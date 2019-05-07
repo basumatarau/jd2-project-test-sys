@@ -13,15 +13,6 @@ DROP SCHEMA IF EXISTS `test-system-db` ;
 -- Schema test-system-db
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `test-system-db` DEFAULT CHARACTER SET utf8 ;
--- -----------------------------------------------------
--- Schema boraji
--- -----------------------------------------------------
-DROP SCHEMA IF EXISTS `boraji` ;
-
--- -----------------------------------------------------
--- Schema boraji
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `boraji` DEFAULT CHARACTER SET latin1 ;
 USE `test-system-db` ;
 
 -- -----------------------------------------------------
@@ -75,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`questions` (
   `body` VARCHAR(1000) NOT NULL,
   `isOfMultipleChoice` TINYINT(1) NOT NULL,
   `subcategories_idsubcategory` INT NULL,
-  `users_iduser` INT NOT NULL,
+  `users_iduser` INT NULL,
   PRIMARY KEY (`idquestion`),
   INDEX `fk_questions_subcategories1_idx` (`subcategories_idsubcategory` ASC),
   INDEX `fk_questions_users1_idx` (`users_iduser` ASC),
@@ -87,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`questions` (
   CONSTRAINT `fk_questions_users1`
     FOREIGN KEY (`users_iduser`)
     REFERENCES `test-system-db`.`users` (`iduser`)
-    ON DELETE NO ACTION
+    ON DELETE SET NULL
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
@@ -105,8 +96,8 @@ CREATE TABLE IF NOT EXISTS `test-system-db`.`answers` (
   CONSTRAINT `fk_answers_questions1`
     FOREIGN KEY (`questions_idquestion`)
     REFERENCES `test-system-db`.`questions` (`idquestion`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
@@ -148,14 +139,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `test-system-db`.`authorities` (
   `idauthority` INT NOT NULL AUTO_INCREMENT,
   `authority` VARCHAR(45) NOT NULL,
-  `users_iduser` INT NOT NULL,
-  PRIMARY KEY (`idauthority`),
-  INDEX `fk_authorities_users1_idx` (`users_iduser` ASC),
-  CONSTRAINT `fk_authorities_users1`
-    FOREIGN KEY (`users_iduser`)
-    REFERENCES `test-system-db`.`users` (`iduser`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`idauthority`))
 ENGINE = InnoDB;
 
 
@@ -202,28 +186,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`users_has_tests`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_tests` (
-  `users_iduser` INT NOT NULL,
-  `tests_idtest` INT NOT NULL,
-  PRIMARY KEY (`users_iduser`, `tests_idtest`),
-  INDEX `fk_users_has_tests_tests1_idx` (`tests_idtest` ASC),
-  INDEX `fk_users_has_tests_users1_idx` (`users_iduser` ASC),
-  CONSTRAINT `fk_users_has_tests_users1`
-    FOREIGN KEY (`users_iduser`)
-    REFERENCES `test-system-db`.`users` (`iduser`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_users_has_tests_tests1`
-    FOREIGN KEY (`tests_idtest`)
-    REFERENCES `test-system-db`.`tests` (`idtest`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `test-system-db`.`users_has_assigned_tests`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_assigned_tests` (
@@ -261,9 +223,10 @@ ENGINE = InnoDB;
 -- Table `test-system-db`.`users_has_subscribers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_subscribers` (
+  `idconnection` INT NOT NULL AUTO_INCREMENT,
   `users_iduser` INT NOT NULL,
   `users_idsubscriber` INT NOT NULL,
-  PRIMARY KEY (`users_iduser`, `users_idsubscriber`),
+  PRIMARY KEY (`idconnection`),
   INDEX `fk_users_has_users_users2_idx` (`users_idsubscriber` ASC),
   INDEX `fk_users_has_users_users1_idx` (`users_iduser` ASC),
   CONSTRAINT `fk_users_has_users_users1`
@@ -328,64 +291,90 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `boraji`.`groups`
+-- Table `test-system-db`.`roles`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `boraji`.`groups` (
-  `idgroup` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(150) NOT NULL,
-  PRIMARY KEY (`idgroup`),
+CREATE TABLE IF NOT EXISTS `test-system-db`.`roles` (
+  `idrole` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(60) NOT NULL,
+  PRIMARY KEY (`idrole`),
   UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`subscribers_has_groups`
+-- Table `test-system-db`.`groups`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`subscribers_has_groups` (
-  `users_has_subscribers_iduser` INT NOT NULL,
-  `users_has_subscribers_idsubscriber` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `test-system-db`.`groups` (
+  `idgroup` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(160) NOT NULL,
+  PRIMARY KEY (`idgroup`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `test-system-db`.`connections_has_groups`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `test-system-db`.`connections_has_groups` (
+  `idconnection` INT NOT NULL,
   `groups_idgroup` INT NOT NULL,
-  PRIMARY KEY (`users_has_subscribers_iduser`, `users_has_subscribers_idsubscriber`, `groups_idgroup`),
+  PRIMARY KEY (`idconnection`, `groups_idgroup`),
   INDEX `fk_users_has_subscribers_has_groups_groups1_idx` (`groups_idgroup` ASC),
-  INDEX `fk_users_has_subscribers_has_groups_users_has_subscribers1_idx` (`users_has_subscribers_iduser` ASC, `users_has_subscribers_idsubscriber` ASC),
+  INDEX `fk_users_has_subscribers_has_groups_users_has_subscribers1_idx` (`idconnection` ASC),
   CONSTRAINT `fk_users_has_subscribers_has_groups_users_has_subscribers1`
-    FOREIGN KEY (`users_has_subscribers_iduser` , `users_has_subscribers_idsubscriber`)
-    REFERENCES `test-system-db`.`users_has_subscribers` (`users_iduser` , `users_idsubscriber`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
+    FOREIGN KEY (`idconnection`)
+    REFERENCES `test-system-db`.`users_has_subscribers` (`idconnection`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_users_has_subscribers_has_groups_groups1`
     FOREIGN KEY (`groups_idgroup`)
-    REFERENCES `boraji`.`groups` (`idgroup`)
+    REFERENCES `test-system-db`.`groups` (`idgroup`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `test-system-db`.`roles_has_authorities`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `test-system-db`.`roles_has_authorities` (
+  `roles_idrole` INT NOT NULL,
+  `authorities_idauthority` INT NOT NULL,
+  PRIMARY KEY (`roles_idrole`, `authorities_idauthority`),
+  INDEX `fk_roles_has_authorities_authorities1_idx` (`authorities_idauthority` ASC),
+  INDEX `fk_roles_has_authorities_roles1_idx` (`roles_idrole` ASC),
+  CONSTRAINT `fk_roles_has_authorities_roles1`
+    FOREIGN KEY (`roles_idrole`)
+    REFERENCES `test-system-db`.`roles` (`idrole`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_roles_has_authorities_authorities1`
+    FOREIGN KEY (`authorities_idauthority`)
+    REFERENCES `test-system-db`.`authorities` (`idauthority`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
-USE `boraji` ;
 
 -- -----------------------------------------------------
--- Table `boraji`.`USERS`
+-- Table `test-system-db`.`users_has_roles`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `boraji`.`USERS` (
-  `USERNAME` VARCHAR(50) NOT NULL,
-  `PASSWORD` VARCHAR(100) NOT NULL,
-  `ENABLED` TINYINT(1) NOT NULL,
-  PRIMARY KEY (`USERNAME`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `boraji`.`AUTHORITIES`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `boraji`.`AUTHORITIES` (
-  `USERNAME` VARCHAR(50) NOT NULL,
-  `AUTHORITY` VARCHAR(50) NOT NULL,
-  UNIQUE INDEX `ix_auth_username` (`USERNAME` ASC, `AUTHORITY` ASC),
-  CONSTRAINT `fk_authorities_users`
-    FOREIGN KEY (`USERNAME`)
-    REFERENCES `boraji`.`USERS` (`USERNAME`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = latin1;
+CREATE TABLE IF NOT EXISTS `test-system-db`.`users_has_roles` (
+  `users_iduser` INT NOT NULL,
+  `roles_idrole` INT NOT NULL,
+  PRIMARY KEY (`users_iduser`, `roles_idrole`),
+  INDEX `fk_users_has_roles_roles1_idx` (`roles_idrole` ASC),
+  INDEX `fk_users_has_roles_users1_idx` (`users_iduser` ASC),
+  CONSTRAINT `fk_users_has_roles_users1`
+    FOREIGN KEY (`users_iduser`)
+    REFERENCES `test-system-db`.`users` (`iduser`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_users_has_roles_roles1`
+    FOREIGN KEY (`roles_idrole`)
+    REFERENCES `test-system-db`.`roles` (`idrole`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
@@ -492,10 +481,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (1, 'ROLE_ADMIN', 1);
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (2, 'ROLE_USER', 2);
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (3, 'ROLE_USER', 3);
-INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`, `users_iduser`) VALUES (4, 'ROLE_ADMIN', 3);
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`) VALUES (1, 'OP_MODERATOR');
+INSERT INTO `test-system-db`.`authorities` (`idauthority`, `authority`) VALUES (2, 'OP_SENIOR_MODERATOR');
 
 COMMIT;
 
@@ -524,16 +511,6 @@ COMMIT;
 
 
 -- -----------------------------------------------------
--- Data for table `test-system-db`.`users_has_tests`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `test-system-db`;
-INSERT INTO `test-system-db`.`users_has_tests` (`users_iduser`, `tests_idtest`) VALUES (1, 1);
-
-COMMIT;
-
-
--- -----------------------------------------------------
 -- Data for table `test-system-db`.`users_has_assigned_tests`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -549,8 +526,43 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`) VALUES (1, 2);
-INSERT INTO `test-system-db`.`users_has_subscribers` (`users_iduser`, `users_idsubscriber`) VALUES (1, 3);
+INSERT INTO `test-system-db`.`users_has_subscribers` (`idconnection`, `users_iduser`, `users_idsubscriber`) VALUES (DEFAULT, 1, 2);
+INSERT INTO `test-system-db`.`users_has_subscribers` (`idconnection`, `users_iduser`, `users_idsubscriber`) VALUES (DEFAULT, 1, 3);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`roles`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`roles` (`idrole`, `name`) VALUES (1, 'ROLE_ADMIN');
+INSERT INTO `test-system-db`.`roles` (`idrole`, `name`) VALUES (2, 'ROLE_TEACHER');
+INSERT INTO `test-system-db`.`roles` (`idrole`, `name`) VALUES (3, 'ROLE_STUDENT');
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`roles_has_authorities`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`roles_has_authorities` (`roles_idrole`, `authorities_idauthority`) VALUES (2, 1);
+INSERT INTO `test-system-db`.`roles_has_authorities` (`roles_idrole`, `authorities_idauthority`) VALUES (2, 2);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `test-system-db`.`users_has_roles`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`users_has_roles` (`users_iduser`, `roles_idrole`) VALUES (1, 1);
+INSERT INTO `test-system-db`.`users_has_roles` (`users_iduser`, `roles_idrole`) VALUES (2, 2);
+INSERT INTO `test-system-db`.`users_has_roles` (`users_iduser`, `roles_idrole`) VALUES (3, 3);
 
 COMMIT;
 

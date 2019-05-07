@@ -24,6 +24,8 @@ public abstract class BaseDaoImpl<T, Id extends Serializable>
         this.entityType = entityType;
     }
 
+    //todo utilize metamodel for log output details in generic methods
+
     @Override
     public Serializable save(T entity) {
         return sessionFactory.getCurrentSession().save(entity);

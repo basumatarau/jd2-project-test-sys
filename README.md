@@ -17,4 +17,4 @@
 <i>stateless authorization, validation and propper logging are to be implemented (there shall be only clean code... better sooner than later...)</i>
 <br/>
 <strong>db schema:</strong>
-![](db-schema-picture-05.png)
+![](db-schema-picture-06.png)
