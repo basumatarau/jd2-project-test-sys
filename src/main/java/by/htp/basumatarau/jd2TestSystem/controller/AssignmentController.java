@@ -17,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -75,8 +74,9 @@ public class AssignmentController {
                                     //todo .orElseThrow(() ->new Exception())
                                     .get()
                     );
-                    submittedQuestion.setSubmittedTest(assignmentDetailed);
-                    submittedQuestionService.persistNewSubmission(submittedQuestion);
+                    //submittedQuestion.setSubmittedTest(assignmentDetailed);
+                    //submittedQuestionService.persistNewSubmission(submittedQuestion);
+                    assignmentDetailed.addSubmittedQuestion(submittedQuestion);
                     Set<SubmittedAnswer> submittedAnswerSet
                             = dtoSq.getSubmittedAnswerDtos().stream()
                             .map(dtoSa -> {
@@ -90,14 +90,17 @@ public class AssignmentController {
                                                 .get()
                                 );
                                 submittedAnswer.setGivenAnswer(dtoSa.isAnswer());
-                                submittedAnswer.setSubmittedQuestion(submittedQuestion);
-                                submittedAnswerService.persistNewSubmission(submittedAnswer);
+                                //submittedAnswer.setSubmittedQuestion(submittedQuestion);
+                                //submittedAnswerService.persistNewSubmission(submittedAnswer);
+                                submittedQuestion.addSubmittedAnswer(submittedAnswer);
                                 return submittedAnswer;
                             }).collect(Collectors.toSet());
                     return submittedQuestion;
                 }).collect(Collectors.toSet());
         assignmentDetailed.setSubmittedQuestionSet(submittedQuestions);
+
         assignmentDetailed.setSubmitted(true);
+
         assignmentService.updateAssignment(assignmentDetailed);
 
         return ResponseEntity.ok(HttpStatus.OK);

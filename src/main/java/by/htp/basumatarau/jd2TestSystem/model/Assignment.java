@@ -120,6 +120,11 @@ public class Assignment {
         return submittedQuestionSet;
     }
 
+    public void addSubmittedQuestion(SubmittedQuestion submittedQuestion){
+        getSubmittedQuestionSet().add(submittedQuestion);
+        submittedQuestion.setSubmittedTest(this);
+    }
+
     public void setSubmittedQuestionSet(Set<SubmittedQuestion> submittedQuestionSet) {
         this.submittedQuestionSet = submittedQuestionSet;
     }

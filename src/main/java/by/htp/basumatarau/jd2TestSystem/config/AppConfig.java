@@ -51,7 +51,6 @@ public class AppConfig {
                 Authority.class,
                 Category.class,
                 Question.class,
-                Subcategory.class,
                 Tag.class,
                 Test.class,
                 User.class,

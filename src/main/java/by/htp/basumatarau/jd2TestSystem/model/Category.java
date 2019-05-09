@@ -17,21 +17,54 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    private Set<Subcategory> subcategories;
+    private Set<Question> questions;
 
-    public Set<Subcategory> getSubcategories() {
-        return subcategories;
+    @ManyToOne
+    @JoinColumn(foreignKey = @ForeignKey,
+            nullable = true,
+            name = "categories_idcategory",
+            referencedColumnName = "idcategory")
+    private Category parentCategory;
+
+    @OneToMany(mappedBy = "parentCategory",
+            cascade = {CascadeType.ALL},
+            orphanRemoval = true)
+    private Set<Category> childCategories;
+
+    public void addChildCategory(Category category){
+        getChildCategories().add(category);
+        category.setParentCategory(this);
     }
 
-    public void setSubcategories(Set<Subcategory> subcategories) {
-        this.subcategories = subcategories;
+    public Category getParentCategory() {
+        return parentCategory;
+    }
+
+    public void setParentCategory(Category parentCategory) {
+        this.parentCategory = parentCategory;
+    }
+
+    public Set<Category> getChildCategories() {
+        return childCategories;
+    }
+
+    public void setChildCategories(Set<Category> childCategories) {
+        this.childCategories = childCategories;
+    }
+
+    public Set<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<Question> questions) {
+        this.questions = questions;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    private void setId(int id) {
         this.id = id;
     }
 

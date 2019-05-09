@@ -16,33 +16,6 @@ CREATE SCHEMA IF NOT EXISTS `test-system-db` DEFAULT CHARACTER SET utf8 ;
 USE `test-system-db` ;
 
 -- -----------------------------------------------------
--- Table `test-system-db`.`categories`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`categories` (
-  `idcategory` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`idcategory`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `test-system-db`.`subcategories`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `test-system-db`.`subcategories` (
-  `idsubcategory` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NOT NULL,
-  `categories_idcategory` INT NOT NULL,
-  PRIMARY KEY (`idsubcategory`),
-  INDEX `fk_subcategories_categories1_idx` (`categories_idcategory` ASC),
-  CONSTRAINT `fk_subcategories_categories1`
-    FOREIGN KEY (`categories_idcategory`)
-    REFERENCES `test-system-db`.`categories` (`idcategory`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `test-system-db`.`users`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`users` (
@@ -59,27 +32,44 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `test-system-db`.`categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `test-system-db`.`categories` (
+  `idcategory` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `categories_idcategory` INT NULL,
+  PRIMARY KEY (`idcategory`),
+  INDEX `fk_categories_categories1_idx` (`categories_idcategory` ASC),
+  CONSTRAINT `fk_categories_categories1`
+    FOREIGN KEY (`categories_idcategory`)
+    REFERENCES `test-system-db`.`categories` (`idcategory`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `test-system-db`.`questions`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `test-system-db`.`questions` (
   `idquestion` INT NOT NULL AUTO_INCREMENT,
   `body` VARCHAR(1000) NOT NULL,
   `isOfMultipleChoice` TINYINT(1) NOT NULL,
-  `subcategories_idsubcategory` INT NULL,
-  `users_iduser` INT NULL,
+  `users_iduser` INT NOT NULL,
+  `categories_idcategory` INT NULL,
   PRIMARY KEY (`idquestion`),
-  INDEX `fk_questions_subcategories1_idx` (`subcategories_idsubcategory` ASC),
   INDEX `fk_questions_users1_idx` (`users_iduser` ASC),
-  CONSTRAINT `fk_questions_subcategories1`
-    FOREIGN KEY (`subcategories_idsubcategory`)
-    REFERENCES `test-system-db`.`subcategories` (`idsubcategory`)
-    ON DELETE RESTRICT
-    ON UPDATE CASCADE,
+  INDEX `fk_questions_categories1_idx` (`categories_idcategory` ASC),
   CONSTRAINT `fk_questions_users1`
     FOREIGN KEY (`users_iduser`)
     REFERENCES `test-system-db`.`users` (`iduser`)
-    ON DELETE SET NULL
-    ON UPDATE CASCADE)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_questions_categories1`
+    FOREIGN KEY (`categories_idcategory`)
+    REFERENCES `test-system-db`.`categories` (`idcategory`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -382,26 +372,6 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
--- Data for table `test-system-db`.`categories`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `test-system-db`;
-INSERT INTO `test-system-db`.`categories` (`idcategory`, `name`) VALUES (1, 'geography');
-
-COMMIT;
-
-
--- -----------------------------------------------------
--- Data for table `test-system-db`.`subcategories`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `test-system-db`;
-INSERT INTO `test-system-db`.`subcategories` (`idsubcategory`, `name`, `categories_idcategory`) VALUES (1, 'elementary', 1);
-
-COMMIT;
-
-
--- -----------------------------------------------------
 -- Data for table `test-system-db`.`users`
 -- -----------------------------------------------------
 START TRANSACTION;
@@ -414,14 +384,24 @@ COMMIT;
 
 
 -- -----------------------------------------------------
+-- Data for table `test-system-db`.`categories`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `test-system-db`;
+INSERT INTO `test-system-db`.`categories` (`idcategory`, `name`, `categories_idcategory`) VALUES (1, 'geography', NULL);
+
+COMMIT;
+
+
+-- -----------------------------------------------------
 -- Data for table `test-system-db`.`questions`
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `test-system-db`;
-INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (1, 'What is the capital of Germany?', 0, 1, 1);
-INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (2, 'What is the capital of Japan?', 0, 1, 2);
-INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (3, 'What is the capital of Italy?', 0, 1, 3);
-INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `subcategories_idsubcategory`, `users_iduser`) VALUES (4, 'Which of these are real countries?', 1, 1, 1);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `users_iduser`, `categories_idcategory`) VALUES (1, 'What is the capital of Germany?', 0, 1, NULL);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `users_iduser`, `categories_idcategory`) VALUES (2, 'What is the capital of Japan?', 0, 2, NULL);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `users_iduser`, `categories_idcategory`) VALUES (3, 'What is the capital of Italy?', 0, 3, NULL);
+INSERT INTO `test-system-db`.`questions` (`idquestion`, `body`, `isOfMultipleChoice`, `users_iduser`, `categories_idcategory`) VALUES (4, 'Which of these are real countries?', 1, 1, NULL);
 
 COMMIT;
 

@@ -1,7 +1,6 @@
 package by.htp.basumatarau.jd2TestSystem.model;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -33,8 +32,8 @@ public class Question {
     private Set<Answer> answerSet = new LinkedHashSet<>();
 
     @ManyToOne
-    @JoinColumn(name = "subcategories_idsubcategory", nullable = true)
-    private Subcategory subcategory;
+    @JoinColumn(name = "categories_idcategory", nullable = true)
+    private Category category;
 
     @ManyToMany
     @JoinTable(
@@ -71,12 +70,12 @@ public class Question {
         this.answerSet = answerSet;
     }
 
-    public Subcategory getSubcategory() {
-        return subcategory;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setSubcategory(Subcategory subcategory) {
-        this.subcategory = subcategory;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public Set<Tag> getTagSet() {
